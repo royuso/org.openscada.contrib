@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.openscada.contrib.sdk"
+      label="openSCADA Contrib SDK Feature"
+      version="1.1.0.qualifier"
+      provider-name="openSCADA.org">
+
+   <description>
+      The SDK project (binaries and sources) of the openSCADA Contrib Feature
+   </description>
+
+   <copyright>
+      See the specific bundle for its copyright information.
+   </copyright>
+
+   <license>
+      See the specific bundle for its license information.
+   </license>
+
+   <includes
+         id="org.openscada.contrib"
+         version="0.0.0"/>
+         
+   <includes
+         id="org.openscada.contrib.source"
+         version="0.0.0"/>
+
+</feature>
