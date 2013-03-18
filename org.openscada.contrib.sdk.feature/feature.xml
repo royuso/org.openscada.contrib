@@ -21,8 +21,10 @@
          id="org.openscada.contrib"
          version="0.0.0"/>
          
+         <!--
    <includes
          id="org.openscada.contrib.source"
          version="0.0.0"/>
+         -->
 
 </feature>

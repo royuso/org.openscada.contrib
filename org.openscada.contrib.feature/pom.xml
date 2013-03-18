@@ -16,6 +16,7 @@
 
 	<!-- source features -->
 
+	<!--
 	<build>
 		<plugins>
 
@@ -52,5 +53,6 @@
 			</plugin>
 		</plugins>
 	</build>
+	-->
 
 </project>
