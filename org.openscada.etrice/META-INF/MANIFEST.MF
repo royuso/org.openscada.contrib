@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Etrice
+Bundle-Name: openSCADA eTrice
 Bundle-SymbolicName: org.openscada.etrice
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 0.1.0.qualifier
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Import-Package: org.eclipse.etrice.runtime.java.debugging;version="0.2.0",
  org.eclipse.etrice.runtime.java.messaging,
@@ -33,5 +33,14 @@ Import-Package: org.eclipse.etrice.runtime.java.debugging;version="0.2.0",
  org.openscada.sec.callback;version="1.1.0",
  org.openscada.utils.concurrent;version="1.1.0",
  org.slf4j;version="1.6.4"
-Export-Package: org.openscada.etrice;version="0.1.0";uses:="org.eclipse.etrice.runtime.java.modelbase,org.eclipse.etrice.runtime.java.messaging"
+Export-Package: org.openscada.etrice;version="0.1.0";
+  uses:="org.openscada.da.server.common,
+   org.openscada.da.core.server,
+   org.openscada.da.server.common.chain,
+   org.openscada.da.server.common.configuration,
+   org.openscada.da.server.common.impl,
+   org.openscada.utils.concurrent,
+   org.openscada.core.server,
+   org.openscada.core"
 Require-Bundle: org.openscada.da.server.exporter.ngp;bundle-version="1.0.0"
+Bundle-Vendor: openSCADA.org
