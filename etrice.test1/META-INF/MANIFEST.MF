@@ -7,4 +7,6 @@ Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.eclipse.equinox.app,
  org.eclipse.etrice.modellib.java;bundle-version="1.0.0",
  org.eclipse.etrice.runtime.java;bundle-version="1.0.0"
-Import-Package: org.openscada.etrice;version="0.1.0"
+Import-Package: org.openscada.core;version="1.1.0",
+ org.openscada.da.server.common.chain;version="1.1.0",
+ org.openscada.etrice;version="0.1.0"

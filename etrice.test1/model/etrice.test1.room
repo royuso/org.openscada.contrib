@@ -19,22 +19,40 @@ RoomModel etrice.test1 {
 		ActorRef item : ServerDataItem
 		 
 		LayerConnection ref top satisfied_by timer.timer
-		LayerConnection ref top satisfied_by item.server
+		// LayerConnection ref top satisfied_by item.server
+	}
+	
+	ActorClass Item1 extends ServerDataItem {
+		Structure { }
+		Behavior { }
+	}
+	ActorClass Item2 extends ServerDataItem {
+		Structure { }
+		Behavior { }
 	}
 	
 	ActorClass TestTop {
 		Structure {
 			SAP timer : PTimer
 			ActorRef test : Test
+			ActorRef serverItem1: Item1
+			ActorRef serverItem2: Item2
+			Binding serverItem1.server and test.item1
+			Binding serverItem2.server and test.item2
 		}
 		Behavior { }
 	}
 	
 	ActorClass Test {
+		Interface {
+			 conjugated Port item1: ServerItemProtocol
+			 conjugated Port item2: ServerItemProtocol
+		}
 		Structure {
+			external Port item1
+			external Port item2
+			
 			SAP timer : PTimer
-			SAP item1 : ServerItemProtocol
-			SAP item2 : ServerItemProtocol
 			Attribute counter : int32
 		}
 		Behavior{

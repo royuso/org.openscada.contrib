@@ -5,7 +5,7 @@ RoomModel org.openscada.etrice {
  	ActorClass ServerDataItem {
 		
 		Interface {
-			SPP server : ServerItemProtocol
+			Port server : ServerItemProtocol
 		}
 		Structure {
 			usercode1{
@@ -16,7 +16,7 @@ RoomModel org.openscada.etrice {
 				"private HiveWrapper hiveWrapper;"
 				"private DataItemInputOutputChained item;"
 			}
-			ServiceImplementation of server
+			external Port server
 		}
 		Behavior {
 			Operation initUser () {

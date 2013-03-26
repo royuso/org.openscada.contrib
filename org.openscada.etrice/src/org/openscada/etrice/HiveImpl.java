@@ -39,7 +39,7 @@ import org.openscada.da.server.common.HiveServiceRegistry;
 import org.openscada.da.server.common.chain.DataItemInputOutputChained;
 import org.openscada.da.server.common.configuration.ConfigurableHive;
 import org.openscada.da.server.common.impl.HiveCommon;
-import org.openscada.etrice.ServerItemProtocol.ServerItemProtocolReplPort;
+import org.openscada.etrice.ServerItemProtocol.ServerItemProtocolPort;
 import org.openscada.utils.concurrent.FutureTask;
 import org.openscada.utils.concurrent.NotifyFuture;
 
@@ -65,7 +65,7 @@ public class HiveImpl extends HiveCommon implements Hive, ConfigurableHive, Hive
 
     private final Map<String, DataItemInputOutputChained> items = new HashMap<String, DataItemInputOutputChained> ();
 
-    public DataItemInputOutputChained registerItem ( final String itemId, final ServerItemProtocolReplPort port )
+    public DataItemInputOutputChained registerItem ( final String itemId, final ServerItemProtocolPort server )
     {
         DataItemInputOutputChained item = this.items.get ( itemId );
         if ( item != null )
@@ -79,7 +79,7 @@ public class HiveImpl extends HiveCommon implements Hive, ConfigurableHive, Hive
             protected NotifyFuture<WriteResult> startWriteCalculatedValue ( final Variant value, final OperationParameters operationParameters )
             {
 
-                return processWrite ( value, operationParameters, port );
+                return processWrite ( value, operationParameters, server );
 
             }
         };
@@ -95,7 +95,7 @@ public class HiveImpl extends HiveCommon implements Hive, ConfigurableHive, Hive
         return item;
     }
 
-    protected NotifyFuture<WriteResult> processWrite ( final Variant value, final OperationParameters operationParameters, final ServerItemProtocolReplPort port )
+    protected NotifyFuture<WriteResult> processWrite ( final Variant value, final OperationParameters operationParameters, final ServerItemProtocolPort port )
     {
 
         final FutureTask<WriteResult> future = new FutureTask<WriteResult> ( new Callable<WriteResult> () {
