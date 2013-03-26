@@ -1,0 +1,62 @@
+RoomModel org.openscada.etrice {
+	
+	import room.basic.types.* from "platform:/resource/org.eclipse.etrice.modellib.java/models/Types.room"
+	
+ 	ActorClass ServerDataItem {
+		
+		Interface {
+			SPP server : ServerItemProtocol
+		}
+		Structure {
+			usercode1{
+				"import org.openscada.da.server.common.chain.DataItemInputOutputChained;"
+				"import org.openscada.core.VariantEditor;"
+			}
+			usercode2 {
+				"private HiveWrapper hiveWrapper;"
+				"private DataItemInputOutputChained item;"
+			}
+			ServiceImplementation of server
+		}
+		Behavior {
+			Operation initUser () {
+				"hiveWrapper =  new HiveWrapper ();"
+			}
+			Operation destroyUser () {
+				"hiveWrapper.dispose ();"
+				"hiveWrapper = null;"
+			}
+			StateMachine {
+				Transition init: initial -> unconfigured { }
+				Transition doRegister: unconfigured -> registered {
+					triggers {
+						<register: server>
+					}
+					action {
+						"this.item = hiveWrapper.getHive().registerItem(itemName);"
+					}
+				}
+				Transition doUpdate : registered -> registered {
+					triggers {
+						<update: server>
+					}
+					action{
+						"item.updateData ( VariantEditor.toVariant ( value ), null, null );"
+					}
+				}
+				State registered
+				State unconfigured
+			}
+		}
+	}
+	
+	ProtocolClass ServerItemProtocol {
+		incoming {
+			Message register ( itemName : string )
+			Message update ( value : string )
+		}
+		outgoing {
+			Message writeCall ( value : string )
+		}
+	}
+}
