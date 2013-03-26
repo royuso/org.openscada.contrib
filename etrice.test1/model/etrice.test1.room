@@ -1,0 +1,77 @@
+RoomModel etrice.test1 {
+
+	// import room.basic.service.timing.* from "platform:/resource/org.eclipse.etrice.modellib.java/models/TimingService.room"
+	// import org.openscada.etrice.* from "platform:/resource/org.openscada.etrice/model/org.openscada.etrice.room"
+	import room.basic.service.timing.* from "../../org.eclipse.etrice.modellib.java/models/TimingService.room"
+	import room.basic.types.* from "../../org.eclipse.etrice.modellib.java/models/Types.room"
+	import org.openscada.etrice.* from "../../org.openscada.etrice/model/org.openscada.etrice.room"
+
+	LogicalSystem Test_LogSystem {
+		
+		SubSystemRef subsystem : Test_SubSystem
+		
+	}
+
+	SubSystemClass Test_SubSystem {
+		ActorRef top : TestTop
+		ActorRef timer: ATimingService
+		
+		ActorRef item : ServerDataItem
+		 
+		LayerConnection ref top satisfied_by timer.timer
+		LayerConnection ref top satisfied_by item.server
+	}
+	
+	ActorClass TestTop {
+		Structure {
+			SAP timer : PTimer
+			ActorRef test : Test
+		}
+		Behavior { }
+	}
+	
+	ActorClass Test {
+		Structure {
+			SAP timer : PTimer
+			SAP item1 : ServerItemProtocol
+			SAP item2 : ServerItemProtocol
+			Attribute counter : int32
+		}
+		Behavior{
+			StateMachine {
+				Transition init: initial -> state0 { }
+				Transition tr0: state0 -> state1 {
+					triggers {
+						<timeout: timer>
+					}
+				}
+				Transition tr1: state1 -> state1 {
+					triggers {
+						<timeout: timer>
+					}
+				}
+				Transition reset: state1 -> state1 {
+					triggers {
+						<writeCall: item1>
+					}
+					action {
+						"counter=0;"
+					}
+				}
+				State state0 {
+					entry {
+						"item1.register(\"item1\");\nitem2.register(\"item2\");\n\nitem1.update(\"1\");\nitem2.update(\"1\");\n\ntimer.startTimer(1000);\n\n\n"
+					}
+				}
+				State state1
+				{
+					entry {
+						"System.out.println(\"Hello World\");\n\ncounter++;\nitem1.update(\"\"+counter);\nitem2.update(\"\"+counter);\n\ntimer.startTimer(1000);\n\n"
+					}
+				}
+			}
+		}
+	}
+	
+
+}

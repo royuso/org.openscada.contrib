@@ -20,11 +20,11 @@ RoomModel org.openscada.etrice {
 		}
 		Behavior {
 			Operation initUser () {
-				"hiveWrapper =  new HiveWrapper ();"
+				"this.hiveWrapper =  new HiveWrapper ();"
 			}
 			Operation destroyUser () {
-				"hiveWrapper.dispose ();"
-				"hiveWrapper = null;"
+				"this.hiveWrapper.dispose ();"
+				"this.hiveWrapper = null;"
 			}
 			StateMachine {
 				Transition init: initial -> unconfigured { }
@@ -33,7 +33,7 @@ RoomModel org.openscada.etrice {
 						<register: server>
 					}
 					action {
-						"this.item = hiveWrapper.getHive().registerItem(itemName);"
+						"this.item = this.hiveWrapper.getHive ().registerItem ( itemName, this.server);"
 					}
 				}
 				Transition doUpdate : registered -> registered {
@@ -41,7 +41,7 @@ RoomModel org.openscada.etrice {
 						<update: server>
 					}
 					action{
-						"item.updateData ( VariantEditor.toVariant ( value ), null, null );"
+						"this.item.updateData ( VariantEditor.toVariant ( value ), null, null );"
 					}
 				}
 				State registered
