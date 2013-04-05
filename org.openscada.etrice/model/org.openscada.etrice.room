@@ -2,10 +2,10 @@ RoomModel org.openscada.etrice {
 	
 	import room.basic.types.* from "platform:/resource/org.eclipse.etrice.modellib.java/models/Types.room"
 	
- 	ActorClass ServerDataItem {
+ 	ActorClass NamedServerDataItem {
 		
 		Interface {
-			Port server : ServerItemProtocol
+			Port item : ServerItemProtocol
 		}
 		Structure {
 			usercode1{
@@ -14,34 +14,90 @@ RoomModel org.openscada.etrice {
 			}
 			usercode2 {
 				"private HiveWrapper hiveWrapper;"
-				"private DataItemInputOutputChained item;"
+				"private DataItemInputOutputChained dataItem;"
 			}
-			external Port server
+			
+			external Port item
+			
+			Attribute itemId : string
+		}
+		Behavior {
+			Operation initUser () {
+				"this.hiveWrapper =  new HiveWrapper ();"
+				"this.dataItem = this.hiveWrapper.getHive ().registerItem ( itemId, this.item);"
+			}
+			Operation destroyUser () {
+				"if ( this.dataItem != null ) {"
+				"  this.hiveWrapper.getHive ().unregisterItem ( this.dataItem );"
+				"  this.dataItem = null; }"
+				
+				"this.hiveWrapper.dispose ();"
+				"this.hiveWrapper = null;"
+				 
+				
+			}
+			StateMachine {
+				Transition init: initial -> registered { }
+				Transition doUpdate : registered -> registered {
+					triggers {
+						<update: item>
+					}
+					action{
+						"this.dataItem.updateData ( VariantEditor.toVariant ( value ), null, null );"
+					}
+				}
+				State registered
+			}
+		}
+	}
+	
+ 	ActorClass RegisteredServerDataItem {
+		
+		Interface {
+			Port registration : RegisterItemProtocol
+			Port item : ServerItemProtocol
+		}
+		Structure {
+			usercode1{
+				"import org.openscada.da.server.common.chain.DataItemInputOutputChained;"
+				"import org.openscada.core.VariantEditor;"
+			}
+			usercode2 {
+				"private HiveWrapper hiveWrapper;"
+				"private DataItemInputOutputChained dataItem;"
+			}
+			external Port registration
+			external Port item
 		}
 		Behavior {
 			Operation initUser () {
 				"this.hiveWrapper =  new HiveWrapper ();"
 			}
 			Operation destroyUser () {
+				"if ( this.dataItem != null ) {"
+				"  this.hiveWrapper.getHive ().unregisterItem ( this.dataItem );"
+				"  this.dataItem = null; }"
+				
 				"this.hiveWrapper.dispose ();"
 				"this.hiveWrapper = null;"
+				
 			}
 			StateMachine {
 				Transition init: initial -> unconfigured { }
 				Transition doRegister: unconfigured -> registered {
 					triggers {
-						<register: server>
+						<register: registration>
 					}
 					action {
-						"this.item = this.hiveWrapper.getHive ().registerItem ( itemName, this.server);"
+						"this.dataItem = this.hiveWrapper.getHive ().registerItem ( itemName, this.item);"
 					}
 				}
 				Transition doUpdate : registered -> registered {
 					triggers {
-						<update: server>
+						<update: item>
 					}
 					action{
-						"this.item.updateData ( VariantEditor.toVariant ( value ), null, null );"
+						"this.dataItem.updateData ( VariantEditor.toVariant ( value ), null, null );"
 					}
 				}
 				State registered
@@ -50,9 +106,14 @@ RoomModel org.openscada.etrice {
 		}
 	}
 	
-	ProtocolClass ServerItemProtocol {
+	ProtocolClass RegisterItemProtocol {
 		incoming {
 			Message register ( itemName : string )
+		}
+	}
+	
+	ProtocolClass ServerItemProtocol {
+		incoming {
 			Message update ( value : string )
 		}
 		outgoing {

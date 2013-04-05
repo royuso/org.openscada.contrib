@@ -14,41 +14,51 @@ RoomModel etrice.test1 {
 		ActorRef top : TestTop
 		ActorRef timer: ATimingService
 		
-		ActorRef item : ServerDataItem
-		 
 		LayerConnection ref top satisfied_by timer.timer
-		// LayerConnection ref top satisfied_by item.server
-	}
-	
-	ActorClass Item1 extends ServerDataItem {
-		Structure { }
-		Behavior { }
-	}
-	ActorClass Item2 extends ServerDataItem {
-		Structure { }
-		Behavior { }
 	}
 	
 	ActorClass TestTop {
 		Structure {
+			conjugated Port reg1 : RegisterItemProtocol
+			conjugated Port reg2 : RegisterItemProtocol
+			
 			SAP timer : PTimer
 			ActorRef test : Test
-			ActorRef serverItem1: Item1
-			ActorRef serverItem2: Item2
-			Binding serverItem1.server and test.item1
-			Binding serverItem2.server and test.item2
+			
+			ActorRef serverItem1: RegisteredServerDataItem
+			ActorRef serverItem2: RegisteredServerDataItem
+			ActorRef serverItem3: NamedServerDataItem
+			
+			Binding serverItem1.registration and reg1
+			Binding serverItem2.registration and reg2
+			
+			Binding serverItem1.item and test.item1
+			Binding serverItem2.item and test.item2
+			Binding serverItem3.item and test.item3
 		}
-		Behavior { }
+		Behavior {
+			StateMachine {
+				Transition init: initial -> init0 { }
+				State init0 {
+					entry{
+						"reg1.register(\"item1\");"
+						"reg2.register(\"item2\");"
+					}
+				}
+			}
+		}
 	}
 	
 	ActorClass Test {
 		Interface {
 			 conjugated Port item1: ServerItemProtocol
 			 conjugated Port item2: ServerItemProtocol
+			 conjugated Port item3: ServerItemProtocol
 		}
 		Structure {
 			external Port item1
 			external Port item2
+			external Port item3
 			
 			SAP timer : PTimer
 			Attribute counter : int32
@@ -76,13 +86,15 @@ RoomModel etrice.test1 {
 				}
 				State state0 {
 					entry {
-						"item1.register(\"item1\");\nitem2.register(\"item2\");\n\nitem1.update(\"1\");\nitem2.update(\"1\");\n\ntimer.startTimer(1000);\n\n\n"
+						"item1.update(\"1\");\nitem2.update(\"1\");\n\ntimer.startTimer(1000);\n\n\n"
+						"item3.update(\"1\");"
 					}
 				}
 				State state1
 				{
 					entry {
 						"System.out.println(\"Hello World\");\n\ncounter++;\nitem1.update(\"\"+counter);\nitem2.update(\"\"+counter);\n\ntimer.startTimer(1000);\n\n"
+						"item3.update(\"\"+counter);"
 					}
 				}
 			}
