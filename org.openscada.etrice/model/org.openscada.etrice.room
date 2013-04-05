@@ -2,6 +2,57 @@ RoomModel org.openscada.etrice {
 	
 	import room.basic.types.* from "platform:/resource/org.eclipse.etrice.modellib.java/models/Types.room"
 	
+	ActorClass NamedClientDataItem {
+		
+		Interface {
+			Port item : ClientItemProtocol
+		}
+		
+		Structure {
+			
+			usercode1 {
+				"import org.openscada.etrice.ConnectionManagerWrapper;"
+				"import org.openscada.da.client.DataItem;"
+				"import org.openscada.core.VariantEditor;"
+			}
+			
+			usercode2 {
+				"private ConnectionManagerWrapper wrapper;"
+				"private DataItem dataItem;"
+			}
+			
+			external Port item
+			
+			Attribute connectionUri : string
+			Attribute itemId : string
+		}
+		
+		Behavior {
+			Operation initUser () {
+				"this.wrapper = new ConnectionManagerWrapper ();"
+				"this.dataItem = wrapper.getConnectionManager().getItem ( this.connectionUri, this.itemId, this.item );"
+			}
+			Operation destroyUser () {
+				"this.wrapper.dispose ();"
+				"this.wrapper = null;"
+			}
+			StateMachine{
+				Transition init: initial -> initialized { }
+				
+				Transition doWrite: initialized -> initialized {
+					triggers {
+						<write: item>
+					}
+					action{
+						"this.wrapper.getConnectionManager().write ( this.connectionUri, this.itemId, VariantEditor.toVariant ( value ));"
+					}
+				}
+				
+				State initialized
+			}
+		}
+	}
+	
  	ActorClass NamedServerDataItem {
 		
 		Interface {
@@ -118,6 +169,16 @@ RoomModel org.openscada.etrice {
 		}
 		outgoing {
 			Message writeCall ( value : string )
+		}
+	}
+	
+	ProtocolClass ClientItemProtocol {
+		incoming {
+			Message write ( value : string )
+		}
+		outgoing {
+			Message updateValue ( value : string )
+			Message updateState ( connected : boolean )
 		}
 	}
 }

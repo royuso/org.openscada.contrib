@@ -29,12 +29,15 @@ RoomModel etrice.test1 {
 			ActorRef serverItem2: RegisteredServerDataItem
 			ActorRef serverItem3: NamedServerDataItem
 			
+			ActorRef clientItem1: NamedClientDataItem
+			
 			Binding serverItem1.registration and reg1
 			Binding serverItem2.registration and reg2
 			
 			Binding serverItem1.item and test.item1
 			Binding serverItem2.item and test.item2
 			Binding serverItem3.item and test.item3
+			Binding clientItem1.item and test.item4
 		}
 		Behavior {
 			StateMachine {
@@ -54,14 +57,19 @@ RoomModel etrice.test1 {
 			 conjugated Port item1: ServerItemProtocol
 			 conjugated Port item2: ServerItemProtocol
 			 conjugated Port item3: ServerItemProtocol
+			 
+			 conjugated Port item4: ClientItemProtocol
 		}
 		Structure {
 			external Port item1
 			external Port item2
 			external Port item3
 			
+			external Port item4
+			
 			SAP timer : PTimer
 			Attribute counter : int32
+			Attribute lastClientValue : int32
 		}
 		Behavior{
 			StateMachine {
@@ -75,6 +83,9 @@ RoomModel etrice.test1 {
 					triggers {
 						<timeout: timer>
 					}
+					action {
+						"counter++;"
+					}
 				}
 				Transition reset: state1 -> state1 {
 					triggers {
@@ -84,17 +95,63 @@ RoomModel etrice.test1 {
 						"counter=0;"
 					}
 				}
+				Transition tr2: state1 -> cp cp0 {
+					triggers {
+						<updateValue: item4>
+					}
+					action {
+						"System.out.println (\"Update: \" + value );"
+						"this.lastClientValue = value == null ? -1 : Integer.parseInt ( value );\n"
+					}
+				}
+				Transition tr4: state2 -> state1 {
+					triggers {
+						<writeCall: item1>
+					}
+					action {
+						"counter=0;"
+					}
+				}
+				Transition tr5: cp cp0 -> state2 {
+					cond {
+						"this.lastClientValue >= 10\n"
+					}
+				}
+				Transition tr3: cp cp0 -> state1
+				Transition tr6: state2 -> state1 {
+					triggers {
+						<timeout: timer>
+					}
+					action {
+						"counter=0;"
+					}
+				}
+				ChoicePoint cp0
 				State state0 {
 					entry {
-						"item1.update(\"1\");\nitem2.update(\"1\");\n\ntimer.startTimer(1000);\n\n\n"
+						"item1.update(\"1\");\nitem2.update(\"1\");\n\ntimer.startTimeout(1000);\n\n\n"
 						"item3.update(\"1\");"
+					}
+					exit {
+						"timer.kill();"
 					}
 				}
 				State state1
 				{
 					entry {
-						"System.out.println(\"Hello World\");\n\ncounter++;\nitem1.update(\"\"+counter);\nitem2.update(\"\"+counter);\n\ntimer.startTimer(1000);\n\n"
+						"item1.update(\"\"+counter);\nitem2.update(\"\"+counter);\n\ntimer.startTimeout(1000);\n\n"
 						"item3.update(\"\"+counter);"
+					}
+					exit {
+						"timer.kill();"
+					}
+				}
+				State state2 {
+					entry {
+						"timer.startTimeout(10000);"
+					}
+					exit {
+						"timer.kill();"
 					}
 				}
 			}
