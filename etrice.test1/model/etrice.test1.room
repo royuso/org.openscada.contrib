@@ -1,7 +1,5 @@
 RoomModel etrice.test1 {
 
-	// import room.basic.service.timing.* from "platform:/resource/org.eclipse.etrice.modellib.java/models/TimingService.room"
-	// import org.openscada.etrice.* from "platform:/resource/org.openscada.etrice/model/org.openscada.etrice.room"
 	import room.basic.service.timing.* from "../../org.eclipse.etrice.modellib.java/models/TimingService.room"
 	import room.basic.types.* from "../../org.eclipse.etrice.modellib.java/models/Types.room"
 	import org.openscada.etrice.* from "../../org.openscada.etrice/model/org.openscada.etrice.room"
