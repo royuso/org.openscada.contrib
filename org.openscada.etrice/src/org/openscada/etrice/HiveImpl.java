@@ -102,7 +102,7 @@ public class HiveImpl extends HiveCommon implements Hive, ConfigurableHive, Hive
             @Override
             public WriteResult call () throws Exception
             {
-                port.writeCall ( value.asString ( null ) );
+                port.writeCall ( value );
                 return WriteResult.OK;
             }
         } );

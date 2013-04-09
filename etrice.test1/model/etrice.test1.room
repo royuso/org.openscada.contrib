@@ -61,11 +61,15 @@ RoomModel etrice.test1 {
 			 conjugated Port item4: ClientItemProtocol
 		}
 		Structure {
+			
+			usercode1 { "import org.openscada.core.Variant;" }
+			
 			external Port item1
 			external Port item2
 			external Port item3
 			
 			external Port item4
+			
 			
 			SAP timer : PTimer
 			Attribute counter : int32
@@ -100,8 +104,7 @@ RoomModel etrice.test1 {
 						<updateValue: item4>
 					}
 					action {
-						"System.out.println (\"Update: \" + value );"
-						"this.lastClientValue = value == null ? -1 : Integer.parseInt ( value );\n"
+						"System.out.println (\"Update: \" + value );\nthis.lastClientValue = value == null ? -1 : value.asInteger(-1);\n\n"
 					}
 				}
 				Transition tr4: state2 -> state1 {
@@ -129,8 +132,7 @@ RoomModel etrice.test1 {
 				ChoicePoint cp0
 				State state0 {
 					entry {
-						"item1.update(\"1\");\nitem2.update(\"1\");\n\ntimer.startTimeout(1000);\n\n\n"
-						"item3.update(\"1\");"
+						"item1.update(Variant.valueOf(1));\nitem2.update(Variant.valueOf(1));\nitem3.update(Variant.valueOf(1));\n\ntimer.startTimeout(1000);\n\n\n"
 					}
 					exit {
 						"timer.kill();"
@@ -139,8 +141,7 @@ RoomModel etrice.test1 {
 				State state1
 				{
 					entry {
-						"item1.update(\"\"+counter);\nitem2.update(\"\"+counter);\n\ntimer.startTimeout(1000);\n\n"
-						"item3.update(\"\"+counter);"
+						"item1.update(Variant.valueOf(counter));\nitem2.update(Variant.valueOf(counter));\nitem3.update(Variant.valueOf(counter));\n\ntimer.startTimeout(1000);\n"
 					}
 					exit {
 						"timer.kill();"

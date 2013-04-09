@@ -133,7 +133,7 @@ public class ConnectionManager
                 }
                 else
                 {
-                    this.item.updateValue ( v.asString ( null ) );
+                    this.item.updateValue ( v );
                 }
             }
         }

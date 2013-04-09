@@ -2,6 +2,8 @@ RoomModel org.openscada.etrice {
 	
 	import room.basic.types.* from "platform:/resource/org.eclipse.etrice.modellib.java/models/Types.room"
 	
+	PrimitiveType variant: ptCharacter -> org.openscada.core.Variant (org.openscada.core.Variant) default "Variant.NULL"
+	
 	ActorClass NamedClientDataItem {
 		
 		Interface {
@@ -44,7 +46,7 @@ RoomModel org.openscada.etrice {
 						<write: item>
 					}
 					action{
-						"this.wrapper.getConnectionManager().write ( this.connectionUri, this.itemId, VariantEditor.toVariant ( value ));"
+						"this.wrapper.getConnectionManager().write ( this.connectionUri, this.itemId,  value );"
 					}
 				}
 				
@@ -94,7 +96,7 @@ RoomModel org.openscada.etrice {
 						<update: item>
 					}
 					action{
-						"this.dataItem.updateData ( VariantEditor.toVariant ( value ), null, null );"
+						"this.dataItem.updateData ( value, null, null );"
 					}
 				}
 				State registered
@@ -140,7 +142,7 @@ RoomModel org.openscada.etrice {
 						<register: registration>
 					}
 					action {
-						"this.dataItem = this.hiveWrapper.getHive ().registerItem ( itemName, this.item);"
+						"this.dataItem = this.hiveWrapper.getHive ().registerItem ( itemId, this.item);"
 					}
 				}
 				Transition doUpdate : registered -> registered {
@@ -148,7 +150,7 @@ RoomModel org.openscada.etrice {
 						<update: item>
 					}
 					action{
-						"this.dataItem.updateData ( VariantEditor.toVariant ( value ), null, null );"
+						"this.dataItem.updateData ( value, null, null );"
 					}
 				}
 				State registered
@@ -159,25 +161,25 @@ RoomModel org.openscada.etrice {
 	
 	ProtocolClass RegisterItemProtocol {
 		incoming {
-			Message register ( itemName : string )
+			Message register ( itemId : string )
 		}
 	}
 	
 	ProtocolClass ServerItemProtocol {
 		incoming {
-			Message update ( value : string )
+			Message update ( value : variant )
 		}
 		outgoing {
-			Message writeCall ( value : string )
+			Message writeCall ( value : variant )
 		}
 	}
 	
 	ProtocolClass ClientItemProtocol {
 		incoming {
-			Message write ( value : string )
+			Message write ( value : variant )
 		}
 		outgoing {
-			Message updateValue ( value : string )
+			Message updateValue ( value : variant )
 			Message updateState ( connected : boolean )
 		}
 	}
