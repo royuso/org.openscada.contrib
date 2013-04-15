@@ -42,9 +42,13 @@ import org.openscada.da.server.common.impl.HiveCommon;
 import org.openscada.etrice.ServerItemProtocol.ServerItemProtocolPort;
 import org.openscada.utils.concurrent.FutureTask;
 import org.openscada.utils.concurrent.NotifyFuture;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HiveImpl extends HiveCommon implements Hive, ConfigurableHive, HiveServiceRegistry
 {
+
+    private final static Logger logger = LoggerFactory.getLogger ( HiveImpl.class );
 
     private final InvisibleStorage storage;
 
@@ -84,7 +88,7 @@ public class HiveImpl extends HiveCommon implements Hive, ConfigurableHive, Hive
             }
         };
 
-        System.out.println ( "Create new item: " + itemId );
+        logger.info ( "Create new item: {}", itemId );
 
         registerItem ( item );
 

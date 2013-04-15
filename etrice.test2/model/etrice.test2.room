@@ -1,0 +1,115 @@
+RoomModel etrice.test2 {
+	
+	import room.basic.service.timing.* from "../../org.eclipse.etrice.modellib.java/models/TimingService.room"
+	import room.basic.types.* from "../../org.eclipse.etrice.modellib.java/models/Types.room"
+	import org.openscada.etrice.* from "../../org.openscada.etrice/model/org.openscada.etrice.room"
+	import etrice.test2.components.* from "components.room"
+	
+	LogicalSystem TestSystem2 {
+		SubSystemRef subsystem : TestSubSystem2
+	}
+	
+	SubSystemClass TestSubSystem2 {
+		ActorRef top : TopSystem
+		ActorRef timer: ATimingService
+		
+		LayerConnection ref top satisfied_by timer.timer
+	}
+	
+	ActorClass MOVComponent {
+		Interface {
+			conjugated Port mov : MOVProtocol
+		}
+		Structure {
+			external Port mov
+			
+			conjugated Port openStatePort : ServerDigitalInput
+			conjugated Port closeStatePort : ServerDigitalInput
+			conjugated Port openCommandPort : ServerItemProtocol
+			conjugated Port closeCommandPort : ServerItemProtocol
+			conjugated Port transitionPort : ServerAnalogIntegerInput
+			conjugated Port percentPort : ServerAnalogFloatInput
+			
+			conjugated Port openStateReg : RegisterItemProtocol
+			conjugated Port closeStateReg : RegisterItemProtocol
+			conjugated Port openCommandReg : RegisterItemProtocol
+			conjugated Port closeCommandReg : RegisterItemProtocol
+			conjugated Port transitionReg : RegisterItemProtocol
+			conjugated Port percentReg : RegisterItemProtocol
+			
+			ActorRef openState : RegisteredServerDataItem
+			ActorRef closeState : RegisteredServerDataItem			
+			ActorRef openCommand : RegisteredServerDataItem
+			ActorRef closeCommand : RegisteredServerDataItem
+			ActorRef transition : RegisteredServerDataItem
+			ActorRef precentItem : RegisteredServerDataItem
+			
+			Binding openStatePort and openState.digital
+			Binding closeStatePort and closeState.digital
+			Binding openCommandPort and openCommand.item
+			Binding closeCommandPort and closeCommand.item
+			Binding transitionPort and transition.analogInt
+			Binding percentPort and precentItem.analogFloat
+			
+			Binding openStateReg and openState.registration
+			Binding closeStateReg and closeState.registration
+			Binding openCommandReg and openCommand.registration
+			Binding closeCommandReg and closeCommand.registration
+			Binding transitionReg and transition.registration
+			Binding percentReg and precentItem.registration
+			
+		}
+		Behavior {
+			StateMachine {
+				Transition init: initial -> initialized {
+					action {
+						"openStateReg.register(\"mov1.openState\");"
+						"openCommandReg.register(\"mov1.openCommand\");"
+						"closeStateReg.register(\"mov1.closeState\");"
+						"closeCommandReg.register(\"mov1.closeCommand\");"
+						"transitionReg.register(\"mov1.transition\");"
+						"percentReg.register(\"mov1.percent\");"
+					}
+				}
+				Transition doChange: initialized -> initialized {
+					triggers {
+						<stateChanged: mov>
+					}
+					action {
+						"openStatePort.updateDigital(state.getOpenState() );"
+						"closeStatePort.updateDigital(state.getCloseState() );"
+						"transitionPort.updateInteger(state.getTransitDirection() );"
+						"percentPort.updateFloat(state.getPercentOpen() );"
+					}
+				}
+				Transition doOpen: initialized -> initialized {
+					triggers {
+						<writeCall: openCommandPort>
+					}
+					action {
+						"mov.open();"
+					}
+				}
+				Transition doClose: initialized -> initialized {
+					triggers {
+						<writeCall: closeCommandPort>
+					}
+					action {
+						"mov.close();"
+					}
+				}
+				State initialized
+			}
+		}
+	}
+	
+	ActorClass TopSystem
+	{
+		Structure {
+			ActorRef mov1 : MOV
+			ActorRef mov1Component : MOVComponent
+			Binding mov1Component.mov and mov1.stateProtocol
+		}
+		Behavior { }
+	}
+}

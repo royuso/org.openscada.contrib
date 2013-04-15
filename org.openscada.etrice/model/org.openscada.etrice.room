@@ -109,11 +109,15 @@ RoomModel org.openscada.etrice {
 		Interface {
 			Port registration : RegisterItemProtocol
 			Port item : ServerItemProtocol
+			Port digital : ServerDigitalInput
+			Port analogInt : ServerAnalogIntegerInput
+			Port analogFloat : ServerAnalogFloatInput
 		}
 		Structure {
 			usercode1{
 				"import org.openscada.da.server.common.chain.DataItemInputOutputChained;"
 				"import org.openscada.core.VariantEditor;"
+				"import org.openscada.core.Variant;"
 			}
 			usercode2 {
 				"private HiveWrapper hiveWrapper;"
@@ -121,6 +125,9 @@ RoomModel org.openscada.etrice {
 			}
 			external Port registration
 			external Port item
+			external Port digital
+			external Port analogInt
+			external Port analogFloat
 		}
 		Behavior {
 			Operation initUser () {
@@ -145,6 +152,30 @@ RoomModel org.openscada.etrice {
 						"this.dataItem = this.hiveWrapper.getHive ().registerItem ( itemId, this.item);"
 					}
 				}
+				Transition doUpdateDigital : registered -> registered {
+					triggers {
+						<updateDigital: digital>
+					}
+					action{
+						"this.dataItem.updateData ( Variant.valueOf ( value ) , null, null );"
+					}
+				}
+				Transition doUpdateAnalogInteger : registered -> registered {
+					triggers {
+						<updateInteger: analogInt>
+					}
+					action{
+						"this.dataItem.updateData ( Variant.valueOf ( value ) , null, null );"
+					}
+				}
+					Transition doUpdateAnalogFloat: registered -> registered {
+					triggers {
+						<updateFloat: analogFloat>
+					}
+					action{
+						"this.dataItem.updateData ( Variant.valueOf ( value ) , null, null );"
+					}
+				}
 				Transition doUpdate : registered -> registered {
 					triggers {
 						<update: item>
@@ -162,6 +193,24 @@ RoomModel org.openscada.etrice {
 	ProtocolClass RegisterItemProtocol {
 		incoming {
 			Message register ( itemId : string )
+		}
+	}
+	
+	ProtocolClass ServerDigitalInput {
+		incoming {
+			Message updateDigital ( value : boolean )
+		}
+	}
+	
+	ProtocolClass ServerAnalogIntegerInput {
+		incoming {
+			Message updateInteger ( value : int32 )
+		}
+	}
+	
+	ProtocolClass ServerAnalogFloatInput {
+		incoming {
+			Message updateFloat ( value : float64 )
 		}
 	}
 	
