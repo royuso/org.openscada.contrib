@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Test1
+Bundle-SymbolicName: epanet.test1;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Require-Bundle: org.eclipse.equinox.app
+Import-Package: org.addition.epanet.hydraulic;version="1.0.0",
+ org.addition.epanet.hydraulic.structures;version="1.0.0",
+ org.addition.epanet.network,
+ org.addition.epanet.network.io.input;version="1.0.0",
+ org.addition.epanet.network.structures;version="1.0.0",
+ org.addition.epanet.util;version="1.0.0",
+ org.osgi.framework;version="1.7.0"
+Bundle-Activator: epanet.test1.Activator
