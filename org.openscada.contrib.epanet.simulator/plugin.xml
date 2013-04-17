@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+-->
+
+<plugin>
+
+   <extension point="org.eclipse.emf.ecore.generated_package">
+      <package
+            uri="http://openscada.org/DA/Server/EPANET/Simulator/Configuration"
+            class="org.openscada.da.server.epanet.simulator.configuration.ConfigurationPackage"
+            genModel="model/epanet.genmodel"/>
+   </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+            type="configuration"
+            class="org.openscada.da.server.epanet.simulator.configuration.util.ConfigurationResourceFactoryImpl"/>
+   </extension>
+
+</plugin>

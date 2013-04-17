@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="ASCII"?>
+<xsd2ecore:XSD2EcoreMappingRoot xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI"
+    xmlns:xsd2ecore="http://www.eclipse.org/emf/2002/XSD2Ecore" inputs="exporter.xsd#/" outputs="exporter.ecore#/"
+    topToBottom="true">
+  <nested inputs="exporter.xsd#//HiveConfigurationType;XSDComplexTypeDefinition=3"
+      outputs="exporter.ecore#//HiveConfigurationType">
+    <nested inputs="exporter.xsd#//HiveConfigurationType;XSDComplexTypeDefinition=3/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="exporter.ecore#//HiveConfigurationType/any"/>
+  </nested>
+  <nested inputs="bundleentry://487.fwk1912790156/cache/www.w3.org/2001/XMLSchema.xsd#//string;XSDSimpleTypeDefinition=9"
+      outputs="http://www.eclipse.org/emf/2003/XMLType#//String"/>
+  <nested inputs="exporter.xsd#//ExportType;XSDComplexTypeDefinition=1" outputs="exporter.ecore#//ExportType">
+    <nested inputs="exporter.xsd#//ExportType;XSDComplexTypeDefinition=1/XSDAttributeUse"
+        outputs="exporter.ecore#//ExportType/uri"/>
+  </nested>
+  <nested inputs="exporter.xsd#//HiveType;XSDComplexTypeDefinition=2" outputs="exporter.ecore#//HiveType">
+    <nested inputs="exporter.xsd#//HiveType;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="exporter.ecore#//HiveType/configuration"/>
+    <nested inputs="exporter.xsd#//HiveType;XSDComplexTypeDefinition=2/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="exporter.ecore#//HiveType/export"/>
+    <nested inputs="exporter.xsd#//HiveType;XSDComplexTypeDefinition=2/XSDAttributeUse=1"
+        outputs="exporter.ecore#//HiveType/factory"/>
+    <nested inputs="exporter.xsd#//HiveType;XSDComplexTypeDefinition=2/XSDAttributeUse"
+        outputs="exporter.ecore#//HiveType/ref"/>
+  </nested>
+  <nested inputs="exporter.xsd#//AnnouncerType;XSDComplexTypeDefinition=4" outputs="exporter.ecore#//AnnouncerType">
+    <nested inputs="exporter.xsd#//AnnouncerType;XSDComplexTypeDefinition=4/XSDAttributeUse"
+        outputs="exporter.ecore#//AnnouncerType/class"/>
+  </nested>
+  <nested inputs="exporter.xsd#//ConfigurationType;XSDComplexTypeDefinition" outputs="exporter.ecore#//ConfigurationType">
+    <nested inputs="exporter.xsd#//ConfigurationType;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle"
+        outputs="exporter.ecore#//ConfigurationType/hive"/>
+    <nested inputs="exporter.xsd#//ConfigurationType;XSDComplexTypeDefinition/XSDParticle/XSDModelGroup/XSDParticle=1"
+        outputs="exporter.ecore#//ConfigurationType/announcer"/>
+  </nested>
+  <nested inputs="exporter.xsd#//configuration;XSDElementDeclaration" outputs="exporter.ecore#//DocumentRoot/configuration"/>
+</xsd2ecore:XSD2EcoreMappingRoot>

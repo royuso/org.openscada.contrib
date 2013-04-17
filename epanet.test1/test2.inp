@@ -55,10 +55,10 @@ Global Bulk	-1
 Global Wall	0
 
 [TIMES]
-Duration	24:00
-Hydraulic Timestep	0:01
+Duration	0:00
+Hydraulic Timestep	0:00:02
 Quality Timestep	0:05
-Pattern Timestep	6:00
+Pattern Timestep	0:01
 
 [REPORT]
 Page 55

@@ -316,7 +316,7 @@ public class HydraulicSim {
         simulate((DataOutput) new DataOutputStream(out));
 
     }
-
+    
     public long simulateSingleStep() throws ENException, IOException {
 
         if (!running)

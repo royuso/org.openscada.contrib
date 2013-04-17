@@ -56,7 +56,6 @@ public class HiveImpl extends HiveCommon implements Hive, ConfigurableHive, Hive
 
     public HiveImpl ()
     {
-
         setRootFolder ( this.rootFolder = new FolderCommon () );
 
         this.storage = new InvisibleStorage ();
