@@ -19,6 +19,7 @@
 
 package org.openscada.contrib.epanet.simulator.exporter;
 
+import org.openscada.da.server.common.item.factory.DefaultChainItemFactory;
 import org.openscada.da.server.common.item.factory.ItemFactory;
 
 public class ExporterContext
@@ -28,10 +29,19 @@ public class ExporterContext
 
     private final ItemFactory pumpFactory;
 
-    public ExporterContext ( final ItemFactory tankFactory, final ItemFactory pumpFactory )
+    private final ItemFactory nodeFactory;
+
+    private final ItemFactory valveFactory;
+
+    private final ItemFactory linkFactory;
+
+    public ExporterContext ( final DefaultChainItemFactory itemFactory )
     {
-        this.tankFactory = tankFactory;
-        this.pumpFactory = pumpFactory;
+        this.tankFactory = itemFactory.createSubFolderFactory ( "tanks" );
+        this.pumpFactory = itemFactory.createSubFolderFactory ( "pumps" );
+        this.nodeFactory = itemFactory.createSubFolderFactory ( "nodes" );
+        this.valveFactory = itemFactory.createSubFolderFactory ( "valves" );
+        this.linkFactory = itemFactory.createSubFolderFactory ( "links" );
     }
 
     public ItemFactory getTankFactory ()
@@ -42,5 +52,20 @@ public class ExporterContext
     public ItemFactory getPumpFactory ()
     {
         return this.pumpFactory;
+    }
+
+    public ItemFactory getNodeFactory ()
+    {
+        return this.nodeFactory;
+    }
+
+    public ItemFactory getLinkFactory ()
+    {
+        return this.linkFactory;
+    }
+
+    public ItemFactory getValveFactory ()
+    {
+        return this.valveFactory;
     }
 }

@@ -23,37 +23,45 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.addition.epanet.hydraulic.HydraulicSim;
+import org.addition.epanet.hydraulic.structures.SimulationLink;
 import org.addition.epanet.hydraulic.structures.SimulationNode;
 import org.addition.epanet.hydraulic.structures.SimulationPump;
 import org.addition.epanet.hydraulic.structures.SimulationTank;
+import org.addition.epanet.hydraulic.structures.SimulationValve;
 import org.openscada.contrib.epanet.simulator.Hive;
+import org.openscada.contrib.epanet.simulator.exporter.nodes.LinkExporter;
+import org.openscada.contrib.epanet.simulator.exporter.nodes.NodeExporter;
 import org.openscada.contrib.epanet.simulator.exporter.nodes.PumpExporter;
 import org.openscada.contrib.epanet.simulator.exporter.nodes.TankExporter;
+import org.openscada.contrib.epanet.simulator.exporter.nodes.ValveExporter;
 import org.openscada.da.server.common.item.factory.DefaultChainItemFactory;
 
 public class HydraulicExporter
 {
-
-    private final HydraulicSim sim;
-
     private DefaultChainItemFactory itemFactory;
 
     private final Hive hive;
 
-    private DefaultChainItemFactory tankItemFactory;
-
     private final List<ExporterObject> exporters = new LinkedList<ExporterObject> ();
-
-    private DefaultChainItemFactory pumpsItemFactory;
 
     public HydraulicExporter ( final HydraulicSim hydSim, final Hive hive )
     {
-        this.sim = hydSim;
         this.hive = hive;
 
-        for ( final SimulationPump pump : hydSim.getnPumps () )
+        for ( final SimulationLink link : hydSim.getnLinks () )
         {
-            createPump ( pump );
+            if ( link instanceof SimulationPump )
+            {
+                createPump ( (SimulationPump)link );
+            }
+            else if ( link instanceof SimulationValve )
+            {
+                createValve ( (SimulationValve)link );
+            }
+            else
+            {
+                createLink ( link );
+            }
         }
 
         for ( final SimulationNode node : hydSim.getnNodes () )
@@ -61,6 +69,10 @@ public class HydraulicExporter
             if ( node instanceof SimulationTank )
             {
                 createTank ( (SimulationTank)node );
+            }
+            else
+            {
+                createNode ( node );
             }
         }
     }
@@ -70,18 +82,31 @@ public class HydraulicExporter
         this.exporters.add ( new PumpExporter ( pump ) );
     }
 
+    private void createValve ( final SimulationValve valve )
+    {
+        this.exporters.add ( new ValveExporter ( valve ) );
+    }
+
+    private void createLink ( final SimulationLink link )
+    {
+        this.exporters.add ( new LinkExporter ( link ) );
+    }
+
     private void createTank ( final SimulationTank tank )
     {
         this.exporters.add ( new TankExporter ( tank ) );
     }
 
+    private void createNode ( final SimulationNode node )
+    {
+        this.exporters.add ( new NodeExporter ( node ) );
+    }
+
     public void start ()
     {
         this.itemFactory = new DefaultChainItemFactory ( this.hive, this.hive.getRootFolder (), "hydraulic", "hydraulic" );
-        this.tankItemFactory = this.itemFactory.createSubFolderFactory ( "tanks" );
-        this.pumpsItemFactory = this.itemFactory.createSubFolderFactory ( "pumps" );
 
-        final ExporterContext context = new ExporterContext ( this.tankItemFactory, this.pumpsItemFactory );
+        final ExporterContext context = new ExporterContext ( this.itemFactory );
 
         for ( final ExporterObject exporter : this.exporters )
         {

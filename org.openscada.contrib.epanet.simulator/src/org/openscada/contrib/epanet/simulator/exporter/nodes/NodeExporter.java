@@ -19,30 +19,30 @@
 
 package org.openscada.contrib.epanet.simulator.exporter.nodes;
 
-import org.addition.epanet.hydraulic.structures.SimulationTank;
+import org.addition.epanet.hydraulic.structures.SimulationNode;
 import org.openscada.contrib.epanet.simulator.exporter.ExporterContext;
 import org.openscada.contrib.epanet.simulator.exporter.ExporterObject;
 import org.openscada.da.server.common.exporter.ObjectExporter;
 
-public class TankExporter implements ExporterObject
+public class NodeExporter implements ExporterObject
 {
-    private final SimulationTank tank;
+    private final SimulationNode node;
 
-    private final TankState tankState;
+    private final NodeState nodeState;
 
     private ObjectExporter exporter;
 
-    public TankExporter ( final SimulationTank tank )
+    public NodeExporter ( final SimulationNode node )
     {
-        this.tank = tank;
-        this.tankState = new TankState ();
+        this.node = node;
+        this.nodeState = new NodeState ();
     }
 
     @Override
     public void start ( final ExporterContext context )
     {
-        this.exporter = new ObjectExporter ( context.getTankFactory (), true, true, this.tank.getId () + "." );
-        this.exporter.attachTarget ( this.tankState );
+        this.exporter = new ObjectExporter ( context.getNodeFactory (), true, true, this.node.getId () + "." );
+        this.exporter.attachTarget ( this.nodeState );
     }
 
     @Override
@@ -54,7 +54,6 @@ public class TankExporter implements ExporterObject
     @Override
     public void update ()
     {
-        this.tankState.setVolume ( this.tank.getSimVolume () );
-        this.tankState.setHead ( this.tank.getSimHead () );
+        this.nodeState.setHead ( this.node.getSimHead () );
     }
 }

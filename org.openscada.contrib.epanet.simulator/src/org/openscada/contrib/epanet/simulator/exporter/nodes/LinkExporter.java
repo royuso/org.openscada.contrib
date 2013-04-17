@@ -19,7 +19,7 @@
 
 package org.openscada.contrib.epanet.simulator.exporter.nodes;
 
-import org.addition.epanet.hydraulic.structures.SimulationPump;
+import org.addition.epanet.hydraulic.structures.SimulationLink;
 import org.addition.epanet.network.structures.Link.StatType;
 import org.openscada.contrib.epanet.simulator.exporter.ExporterContext;
 import org.openscada.contrib.epanet.simulator.exporter.ExporterObject;
@@ -28,68 +28,54 @@ import org.openscada.da.server.common.DataItemCommand;
 import org.openscada.da.server.common.DataItemCommand.Listener;
 import org.openscada.da.server.common.exporter.ObjectExporter;
 
-public class PumpExporter implements ExporterObject
+public class LinkExporter implements ExporterObject
 {
-    private final SimulationPump pump;
+    private final SimulationLink link;
 
-    private final PumpState pumpState;
+    private final LinkState linkState;
 
     private ObjectExporter exporter;
 
-    public PumpExporter ( final SimulationPump pump )
+    public LinkExporter ( final SimulationLink link )
     {
-        this.pump = pump;
-        this.pumpState = new PumpState ();
+        this.link = link;
+        this.linkState = new LinkState ();
     }
 
     @Override
     public void start ( final ExporterContext context )
     {
-        this.exporter = new ObjectExporter ( context.getPumpFactory (), false, true, this.pump.getLink ().getId () + "." );
-        this.exporter.attachTarget ( this.pumpState );
+        this.exporter = new ObjectExporter ( context.getLinkFactory (), false, true, this.link.getLink ().getId () + "." );
+        this.exporter.attachTarget ( this.linkState );
 
-        final DataItemCommand startCommand = context.getPumpFactory ().createCommand ( this.pump.getLink ().getId () + ".start", null );
+        final DataItemCommand startCommand = context.getLinkFactory ().createCommand ( this.link.getLink ().getId () + ".open", null );
         startCommand.addListener ( new Listener () {
 
             @Override
             public void command ( final Variant value ) throws Exception
             {
-                startPump ();
+                openLink ();
             }
         } );
-        final DataItemCommand stopCommand = context.getPumpFactory ().createCommand ( this.pump.getLink ().getId () + ".stop", null );
+        final DataItemCommand stopCommand = context.getLinkFactory ().createCommand ( this.link.getLink ().getId () + ".close", null );
         stopCommand.addListener ( new Listener () {
 
             @Override
             public void command ( final Variant value ) throws Exception
             {
-                stopPump ();
-            }
-        } );
-        final DataItemCommand settingCommand = context.getPumpFactory ().createCommand ( this.pump.getLink ().getId () + ".setSetting", null );
-        settingCommand.addListener ( new Listener () {
-
-            @Override
-            public void command ( final Variant value ) throws Exception
-            {
-                setSetting ( value.asDouble () );
+                closeLink ();
             }
         } );
     }
 
-    protected void setSetting ( final double value )
+    protected void openLink ()
     {
-        this.pump.setSimSetting ( value );
+        this.link.setSimStatus ( StatType.OPEN );
     }
 
-    protected void startPump ()
+    protected void closeLink ()
     {
-        this.pump.setSimStatus ( StatType.OPEN );
-    }
-
-    protected void stopPump ()
-    {
-        this.pump.setSimStatus ( StatType.CLOSED );
+        this.link.setSimStatus ( StatType.CLOSED );
     }
 
     @Override
@@ -101,6 +87,6 @@ public class PumpExporter implements ExporterObject
     @Override
     public void update ()
     {
-        this.pumpState.update ( this.pump );
+        this.linkState.update ( this.link );
     }
 }

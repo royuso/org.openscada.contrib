@@ -96,5 +96,10 @@ public class ENException extends Exception{
             return String.format(str,arguments);
         return str;
     }
+    
+    @Override
+    public String getMessage () {
+        return toString ();
+    }
 
 }

@@ -19,43 +19,45 @@
 
 package org.openscada.contrib.epanet.simulator.exporter.nodes;
 
-import org.addition.epanet.hydraulic.structures.SimulationPump;
+import org.addition.epanet.hydraulic.structures.SimulationLink;
 import org.addition.epanet.network.structures.Link.StatType;
+import org.openscada.utils.beans.AbstractPropertyChange;
 
-public class PumpState extends LinkState
+public class LinkState extends AbstractPropertyChange
 {
-    public final static String PROP_RUNNING = "running";
 
-    public final static String PROP_SETTING = "setting";
+    public static final String PROP_STATE = "state";
 
-    private boolean running;
+    public static final String PROP_FLOW = "flow";
 
-    private double setting;
+    private StatType state;
 
-    public boolean isRunning ()
+    private double flow;
+
+    protected void setState ( final StatType state )
     {
-        return this.running;
+        firePropertyChange ( PROP_STATE, this.state, this.state = state );
     }
 
-    protected void setRunning ( final boolean running )
+    public StatType getState ()
     {
-        firePropertyChange ( PROP_RUNNING, this.running, this.running = running );
+        return this.state;
     }
 
-    public double getSetting ()
+    public double getFlow ()
     {
-        return this.setting;
+        return this.flow;
     }
 
-    protected void setSetting ( final double setting )
+    protected void setFlow ( final double flow )
     {
-        firePropertyChange ( PROP_SETTING, this.setting, this.setting = setting );
+        firePropertyChange ( PROP_FLOW, this.flow, this.flow = flow );
     }
 
-    public void update ( final SimulationPump pump )
+    public void update ( final SimulationLink link )
     {
-        super.update ( pump );
-        setRunning ( pump.getSimStatus () == StatType.OPEN );
-        setSetting ( pump.getSimSetting () );
+        setState ( link.getSimStatus () );
+        setFlow ( link.getSimFlow () );
     }
+
 }

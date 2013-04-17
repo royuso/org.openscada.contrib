@@ -19,7 +19,7 @@
 
 package org.openscada.contrib.epanet.simulator.exporter.nodes;
 
-import org.addition.epanet.hydraulic.structures.SimulationPump;
+import org.addition.epanet.hydraulic.structures.SimulationValve;
 import org.addition.epanet.network.structures.Link.StatType;
 import org.openscada.contrib.epanet.simulator.exporter.ExporterContext;
 import org.openscada.contrib.epanet.simulator.exporter.ExporterObject;
@@ -28,68 +28,54 @@ import org.openscada.da.server.common.DataItemCommand;
 import org.openscada.da.server.common.DataItemCommand.Listener;
 import org.openscada.da.server.common.exporter.ObjectExporter;
 
-public class PumpExporter implements ExporterObject
+public class ValveExporter implements ExporterObject
 {
-    private final SimulationPump pump;
+    private final SimulationValve valve;
 
-    private final PumpState pumpState;
+    private final ValveState valveState;
 
     private ObjectExporter exporter;
 
-    public PumpExporter ( final SimulationPump pump )
+    public ValveExporter ( final SimulationValve valve )
     {
-        this.pump = pump;
-        this.pumpState = new PumpState ();
+        this.valve = valve;
+        this.valveState = new ValveState ();
     }
 
     @Override
     public void start ( final ExporterContext context )
     {
-        this.exporter = new ObjectExporter ( context.getPumpFactory (), false, true, this.pump.getLink ().getId () + "." );
-        this.exporter.attachTarget ( this.pumpState );
+        this.exporter = new ObjectExporter ( context.getValveFactory (), false, true, this.valve.getLink ().getId () + "." );
+        this.exporter.attachTarget ( this.valveState );
 
-        final DataItemCommand startCommand = context.getPumpFactory ().createCommand ( this.pump.getLink ().getId () + ".start", null );
+        final DataItemCommand startCommand = context.getValveFactory ().createCommand ( this.valve.getLink ().getId () + ".open", null );
         startCommand.addListener ( new Listener () {
 
             @Override
             public void command ( final Variant value ) throws Exception
             {
-                startPump ();
+                openValve ();
             }
         } );
-        final DataItemCommand stopCommand = context.getPumpFactory ().createCommand ( this.pump.getLink ().getId () + ".stop", null );
+        final DataItemCommand stopCommand = context.getValveFactory ().createCommand ( this.valve.getLink ().getId () + ".close", null );
         stopCommand.addListener ( new Listener () {
 
             @Override
             public void command ( final Variant value ) throws Exception
             {
-                stopPump ();
-            }
-        } );
-        final DataItemCommand settingCommand = context.getPumpFactory ().createCommand ( this.pump.getLink ().getId () + ".setSetting", null );
-        settingCommand.addListener ( new Listener () {
-
-            @Override
-            public void command ( final Variant value ) throws Exception
-            {
-                setSetting ( value.asDouble () );
+                closeValve ();
             }
         } );
     }
 
-    protected void setSetting ( final double value )
+    protected void openValve ()
     {
-        this.pump.setSimSetting ( value );
+        this.valve.setSimStatus ( StatType.OPEN );
     }
 
-    protected void startPump ()
+    protected void closeValve ()
     {
-        this.pump.setSimStatus ( StatType.OPEN );
-    }
-
-    protected void stopPump ()
-    {
-        this.pump.setSimStatus ( StatType.CLOSED );
+        this.valve.setSimStatus ( StatType.CLOSED );
     }
 
     @Override
@@ -101,6 +87,6 @@ public class PumpExporter implements ExporterObject
     @Override
     public void update ()
     {
-        this.pumpState.update ( this.pump );
+        this.valveState.update ( this.valve );
     }
 }

@@ -6,6 +6,7 @@ EPANET TUTORIAL
 ;------------------
 J1	850		0
 J2	850		0
+J3	850		0
 
 [RESERVOIRS]
 ;ID	Head
@@ -23,17 +24,26 @@ T2	850		5		0		15		70		0
 ;-----------------------------------------
 P1	T1		J1		3000	12		100
 P2	J1		J2		3000	12		100
-P3	J2		T2		3000	12		100
+;P3	J2		J3		3000	12		100
+P4	J3		T2		3000	12		100
 
 [PUMPS]
 ;ID		Node1	Node2	Parameters
 ;---------------------------------
-PUMP1	J1		J2		HEAD 1 SPEED 1
+PUMP1	J2		J3		HEAD 1 SPEED 1
+PUMP2	J3		J2		HEAD 1 SPEED 1
+
+[VALVES]
+;ID		Node1	Node2	Diam	Type	Setting	Loss
+;---------------------------------------------------------
+;V1		J1		J2		12		FCV		0		0
 
 [STATUS]
 ;ID		Status/Setting
 ;---------------------
 PUMP1	CLOSED
+PUMP2	CLOSED
+;V1		CLOSED
 
 [PATTERNS]
 ;ID	Multipliers

@@ -19,20 +19,12 @@
 
 package org.openscada.contrib.epanet.simulator.exporter.nodes;
 
+import org.addition.epanet.hydraulic.structures.SimulationValve;
 
-public class TankState extends NodeState
+public class ValveState extends LinkState
 {
-    public final static String PROP_VOLUME = "volume";
-
-    private double volume;
-
-    public void setVolume ( final double volume )
+    public void update ( final SimulationValve valve )
     {
-        firePropertyChange ( PROP_VOLUME, this.volume, this.volume = volume );
-    }
-
-    public double getVolume ()
-    {
-        return this.volume;
+        super.update ( valve );
     }
 }

@@ -7,11 +7,9 @@ import java.util.logging.Logger;
 
 import org.addition.epanet.hydraulic.HydraulicSim;
 import org.addition.epanet.hydraulic.structures.SimulationNode;
-import org.addition.epanet.hydraulic.structures.SimulationPump;
 import org.addition.epanet.hydraulic.structures.SimulationTank;
 import org.addition.epanet.network.Network;
 import org.addition.epanet.network.io.input.InputParser;
-import org.addition.epanet.network.structures.Link.StatType;
 import org.eclipse.equinox.app.IApplication;
 import org.eclipse.equinox.app.IApplicationContext;
 
@@ -36,8 +34,6 @@ public class Application implements IApplication
 
         final HydraulicSim hydSim = new HydraulicSim ( net, log );
 
-        int cnt = 0;
-
         System.out.println ( "INIT" );
 
         dump ( hydSim );
@@ -51,13 +47,6 @@ public class Application implements IApplication
             dump ( hydSim );
 
             Thread.sleep ( time );
-
-            cnt++;
-            if ( cnt == 10 )
-            {
-                final SimulationPump p = hydSim.getnPumps ().get ( 0 );
-                p.setSimStatus ( StatType.OPEN );
-            }
         }
 
         return null;

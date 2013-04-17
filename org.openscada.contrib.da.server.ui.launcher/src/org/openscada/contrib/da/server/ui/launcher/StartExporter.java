@@ -35,6 +35,7 @@ import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMap.Entry;
 import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
 import org.eclipse.ui.IWorkbenchPage;
+import org.eclipse.ui.statushandlers.StatusManager;
 import org.openscada.contrib.da.server.exporter.DocumentRoot;
 import org.openscada.contrib.da.server.exporter.ExportType;
 import org.openscada.contrib.da.server.exporter.ExporterPackage;
@@ -47,10 +48,15 @@ import org.openscada.da.server.exporter.NetExport;
 import org.openscada.da.server.exporter.NgpExport;
 import org.openscada.ui.databinding.AbstractSelectionHandler;
 import org.openscada.ui.databinding.SelectionHelper;
+import org.openscada.ui.utils.status.StatusHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 public class StartExporter extends AbstractSelectionHandler
 {
+
+    private final static Logger logger = LoggerFactory.getLogger ( StartExporter.class );
 
     @Override
     public Object execute ( final ExecutionEvent event ) throws ExecutionException
@@ -63,7 +69,8 @@ public class StartExporter extends AbstractSelectionHandler
             }
             catch ( final Exception e )
             {
-                throw new ExecutionException ( "Failed to process", e );
+                logger.warn ( "Failed to start file: " + file, e );
+                StatusManager.getManager ().handle ( StatusHelper.convertStatus ( Activator.PLUGIN_ID, e ), StatusManager.BLOCK );
             }
         }
         return null;

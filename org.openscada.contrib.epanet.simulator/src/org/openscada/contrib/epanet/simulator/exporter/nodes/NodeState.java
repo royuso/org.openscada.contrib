@@ -19,20 +19,22 @@
 
 package org.openscada.contrib.epanet.simulator.exporter.nodes;
 
+import org.openscada.utils.beans.AbstractPropertyChange;
 
-public class TankState extends NodeState
+public class NodeState extends AbstractPropertyChange
 {
-    public final static String PROP_VOLUME = "volume";
+    public static final String PROP_HEAD = "head";
 
-    private double volume;
+    private double head;
 
-    public void setVolume ( final double volume )
+    public double getHead ()
     {
-        firePropertyChange ( PROP_VOLUME, this.volume, this.volume = volume );
+        return this.head;
     }
 
-    public double getVolume ()
+    public void setHead ( final double head )
     {
-        return this.volume;
+        firePropertyChange ( PROP_HEAD, this.head, this.head = head );
     }
+
 }

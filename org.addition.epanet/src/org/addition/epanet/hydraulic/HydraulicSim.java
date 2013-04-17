@@ -938,10 +938,6 @@ public class HydraulicSim {
         return nRules;
     }
     
-    public List<SimulationPump> getnPumps () {
-        return nPumps;
-    }
-
     public List<SimulationControl> getnControls() {
         return nControls;
     }
