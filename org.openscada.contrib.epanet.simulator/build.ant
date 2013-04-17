@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ======================================================================
+       Build EPANET Simulator Driver
+     ====================================================================== -->
+<project name="project" default="default">
+    <description>
+    	Build EPANET Simulator Driver
+    </description>
+	
+	<property name="tmpDir" location="tmp" />
+	
+	<property name="openscada.buildType" value="I"/>
+	<property name="openscada.version" value="1.1.0"/>
+	<property name="openscada.download.base" value="http://download.openscada.org"/>
+
+	<path id="epanet.deps.classpath">
+		<fileset dir="../org.addition.epanet/lib">
+				<include name="**/*.jar"/>
+		</fileset>
+	</path>
+	
+    <!-- ================================= 
+          target: default              
+         ================================= -->
+    <target name="default" depends="download,build,run">
+    </target>
+
+	<!-- ================================= 
+          target: clean              
+         ================================= -->
+    <target name="clean">
+        <delete dir="${tmpDir}" failonerror="false"/>
+    </target>
+	
+	<!-- ================================= 
+          target: run              
+         ================================= -->
+    <target name="run">
+		<java
+			classname="org.openscada.da.server.exporter.Application"
+			fork="true"
+			>
+			
+			<!--
+			<jvmarg line="-Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=4000,suspend=y"/>
+			-->
+			
+			<arg file="configuration/sample1.xml"/>
+			
+			<classpath>
+				<path refid="epanet.deps.classpath"/>
+    			<fileset dir="${tmpDir}/jars">
+    				<include name="**/*.jar"/>
+    			</fileset>	
+				<pathelement location="${tmpDir}/classes"/>
+			</classpath>
+    	</java>        
+    </target>
+	
+	<!-- - - - - - - - - - - - - - - - - - 
+          target: init                      
+         - - - - - - - - - - - - - - - - - -->
+    <target name="init">
+		<mkdir dir="${tmpDir}"/>
+    </target>
+	
+	<!-- ================================= 
+          target: download              
+         ================================= -->
+    <target name="download" depends="init">
+    	<mkdir dir="${tmpDir}/download"/>
+    	<mkdir dir="${tmpDir}/jars"/>
+    	
+    	<getZip name="external"/>
+    	<getZip name="aurora"/>
+    	<getZip name="oxygen"/>
+    	<getZip name="atlantis"/>
+    	
+    	<get usetimestamp="true" src="http://download.openscada.org/mirror/emf-xsd-Update-2.8.3.zip" dest="${tmpDir}/download"/> 
+    	
+		<unzip dest="${tmpDir}/jars">
+			<fileset dir="${tmpDir}/download"  includes="**/*.zip"/>
+		</unzip>
+    	
+    </target>
+	
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: getZip          
+         = = = = = = = = = = = = = = = = = -->
+    <macrodef name="getZip">
+        <attribute name="name" />
+        <sequential>
+        	<get usetimestamp="true" src="${openscada.download.base}/@{name}/${openscada.buildType}/${openscada.version}/org.openscada.@{name}.sdk-${openscada.buildType}.${openscada.version}.zip" dest="${tmpDir}/download"/>
+        </sequential>
+    </macrodef>
+	
+    <!-- ================================= 
+          target: build              
+         ================================= -->
+    <target name="build">
+    	<mkdir dir="${tmpDir}/classes"/>
+    	
+    	<javac
+    			destdir="${tmpDir}/classes"
+    			includeantruntime="false"
+    			debug="yes"
+    			debuglevel="source,lines,vars"
+    		>
+    		<src path="src"/>
+    		<src path="emf-src"/>
+    		<src path="../org.addition.epanet/src"/>
+    		<classpath>
+				<path refid="epanet.deps.classpath"/>
+    			<fileset dir="${tmpDir}/jars">
+    				<include name="**/*.jar"/>
+    			</fileset>	
+    		</classpath>
+    	</javac>
+    	<copy todir="${tmpDir}/classes">
+    		<fileset dir="../org.addition.epanet/src">
+    			<include name="**/*.properties"/>
+			</fileset>
+    	</copy>
+    </target>
+
+
+</project>

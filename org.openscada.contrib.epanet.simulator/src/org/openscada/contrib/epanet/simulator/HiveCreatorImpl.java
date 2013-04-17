@@ -21,17 +21,25 @@ package org.openscada.contrib.epanet.simulator;
 
 import org.openscada.da.core.server.Hive;
 import org.openscada.da.server.common.HiveCreator;
+import org.openscada.da.server.epanet.simulator.configuration.ConfigurationType;
 import org.w3c.dom.Node;
 
 public class HiveCreatorImpl implements HiveCreator
 {
 
     @Override
-    public Hive createHive ( final String reference, final Node node ) throws Exception
+    public Hive createHive ( final String reference, final Object configuration ) throws Exception
     {
         if ( org.openscada.contrib.epanet.simulator.Hive.class.getName ().equals ( reference ) )
         {
-            return new org.openscada.contrib.epanet.simulator.Hive ( node );
+            if ( configuration instanceof Node )
+            {
+                return new org.openscada.contrib.epanet.simulator.Hive ( (Node)configuration );
+            }
+            else if ( configuration instanceof ConfigurationType )
+            {
+                return new org.openscada.contrib.epanet.simulator.Hive ( (ConfigurationType)configuration );
+            }
         }
         return null;
     }

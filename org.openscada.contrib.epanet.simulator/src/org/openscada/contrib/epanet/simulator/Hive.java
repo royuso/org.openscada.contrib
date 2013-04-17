@@ -28,13 +28,20 @@ import org.addition.epanet.hydraulic.HydraulicSim;
 import org.addition.epanet.network.Network;
 import org.addition.epanet.network.Network.FileType;
 import org.addition.epanet.network.io.input.InputParser;
+import org.addition.epanet.util.ENException;
+import org.eclipse.emf.common.util.URI;
+import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.ResourceSet;
+import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.openscada.contrib.epanet.simulator.exporter.HydraulicExporter;
 import org.openscada.da.server.browser.common.FolderCommon;
 import org.openscada.da.server.common.ValidationStrategy;
 import org.openscada.da.server.common.impl.HiveCommon;
+import org.openscada.da.server.epanet.simulator.configuration.ConfigurationPackage;
 import org.openscada.da.server.epanet.simulator.configuration.ConfigurationType;
 import org.openscada.da.server.epanet.simulator.configuration.TypeType;
-import org.openscada.da.server.epanet.simulator.configuration.util.ConfigurationResourceImpl;
+import org.openscada.da.server.epanet.simulator.configuration.util.ConfigurationResourceFactoryImpl;
 import org.openscada.utils.concurrent.NamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +66,7 @@ public class Hive extends HiveCommon
 
     private final Runnable runOnce;
 
-    public Hive ( final Node node ) throws Exception
+    protected Hive ()
     {
         this.julLogger = java.util.logging.Logger.getLogger ( Hive.class.toString () );
         this.julLogger.setUseParentHandlers ( false );
@@ -76,8 +83,18 @@ public class Hive extends HiveCommon
 
         setRootFolder ( this.rootFolder = new FolderCommon () );
         setValidatonStrategy ( ValidationStrategy.GRANT_ALL );
+    }
 
+    public Hive ( final Node node ) throws Exception
+    {
+        this ();
         configure ( node );
+    }
+
+    public Hive ( final ConfigurationType configuration ) throws Exception
+    {
+        this ();
+        configure ( configuration );
     }
 
     @Override
@@ -88,10 +105,25 @@ public class Hive extends HiveCommon
 
     private void configure ( final Node node ) throws Exception
     {
-        final ConfigurationResourceImpl res = new ConfigurationResourceImpl ( null );
+        ConfigurationPackage.eINSTANCE.eClass ();
+
+        final ResourceSet rs = new ResourceSetImpl ();
+        rs.getResourceFactoryRegistry ().getExtensionToFactoryMap ().put ( Resource.Factory.Registry.DEFAULT_EXTENSION, new ConfigurationResourceFactoryImpl () );
+
+        final XMLResource res = (XMLResource)rs.createResource ( URI.createURI ( "urn:dummy" ) );
+
+        res.getDefaultLoadOptions ().put ( XMLResource.OPTION_DOM_USE_NAMESPACES_IN_SCOPE, Boolean.TRUE );
+        res.getDefaultLoadOptions ().put ( XMLResource.OPTION_SUPPRESS_DOCUMENT_ROOT, Boolean.TRUE );
+
         res.load ( node, null );
+
         final ConfigurationType cfg = (ConfigurationType)res.getContents ().get ( 0 );
 
+        configure ( cfg );
+    }
+
+    private void configure ( final ConfigurationType cfg ) throws ENException
+    {
         final String fileName = cfg.getFile ();
         final TypeType type = cfg.getType ();
         FileType fileType;

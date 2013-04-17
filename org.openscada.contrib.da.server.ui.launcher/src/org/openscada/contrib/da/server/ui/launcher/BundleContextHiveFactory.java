@@ -22,6 +22,7 @@ package org.openscada.contrib.da.server.ui.launcher;
 
 import java.util.Collection;
 
+import org.eclipse.emf.ecore.EObject;
 import org.openscada.da.core.server.Hive;
 import org.openscada.da.server.common.HiveCreator;
 import org.openscada.da.server.exporter.ConfigurationException;
@@ -30,7 +31,6 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Node;
 
 public class BundleContextHiveFactory
 {
@@ -44,7 +44,7 @@ public class BundleContextHiveFactory
         this.context = context;
     }
 
-    public Hive createHive ( final String reference, final Node node ) throws ConfigurationException
+    public Hive createHive ( final String reference, final EObject node ) throws ConfigurationException
     {
         try
         {

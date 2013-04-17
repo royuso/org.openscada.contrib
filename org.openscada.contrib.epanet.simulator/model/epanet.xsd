@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema targetNamespace="http://openscada.org/DA/Server/EPANET/Simulator/Configuration" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:epanet="http://openscada.org/DA/Server/EPANET/Simulator/Configuration">
-
+<schema 
+	targetNamespace="http://openscada.org/DA/Server/EPANET/Simulator/Configuration"
+	elementFormDefault="qualified"
+	xmlns="http://www.w3.org/2001/XMLSchema"
+	xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore"
+	xmlns:epanet="http://openscada.org/DA/Server/EPANET/Simulator/Configuration">
 
     <complexType name="ConfigurationType">
     	<attribute name="file" type="string" use="required"></attribute>

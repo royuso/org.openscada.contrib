@@ -1,0 +1,86 @@
+[TITLE]
+EPANET TUTORIAL
+
+[JUNCTIONS]
+;ID	Elev	Demand
+;------------------
+J1	850		0
+J2	850		0
+J3	850		0
+
+[RESERVOIRS]
+;ID	Head
+;------------------
+;1	700
+
+[TANKS]
+;ID Elev	InitLvl	MinLvl	MaxLvl	Diam	Volume
+;-----------------------------------------------
+T1	850		0		0		15		70		0
+T2	850		5		0		15		70		0
+
+[PIPES]
+;ID	Node1	Node2	Length	Diam	Roughness
+;-----------------------------------------
+P1	T1		J1		3000	12		100
+P2	J1		J2		3000	12		100
+;P3	J2		J3		3000	12		100
+P4	J3		T2		3000	12		100
+
+[PUMPS]
+;ID		Node1	Node2	Parameters
+;---------------------------------
+PUMP1	J2		J3		HEAD 1 SPEED 1
+PUMP2	J3		J2		HEAD 1 SPEED 1
+
+[VALVES]
+;ID		Node1	Node2	Diam	Type	Setting	Loss
+;---------------------------------------------------------
+;V1		J1		J2		12		FCV		0		0
+
+[STATUS]
+;ID		Status/Setting
+;---------------------
+PUMP1	CLOSED
+PUMP2	CLOSED
+;V1		CLOSED
+
+[PATTERNS]
+;ID	Multipliers
+;-----------------------
+1	0.5	1.3	1	1.2
+
+[CURVES]
+;ID X-Value Y-Value
+;--------------------
+1	1000	1000
+
+[QUALITY]
+;Node	InitQual
+;-------------
+;1	1
+
+[REACTIONS]
+Global Bulk	-1
+Global Wall	0
+
+[TIMES]
+Duration	0:00
+Hydraulic Timestep	0:00:02
+Quality Timestep	0:05
+Pattern Timestep	0:01
+
+[REPORT]
+Page 55
+Energy Yes
+Nodes All
+Links All
+
+[OPTIONS]
+Units	GPM
+Headloss	H-W
+Pattern	1
+Quality	Chlorine mg/L
+Tolerance	0.01
+
+[END]

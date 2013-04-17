@@ -20,9 +20,6 @@
 
 package org.openscada.contrib.da.server.ui.launcher;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.eclipse.core.commands.ExecutionEvent;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.resources.IFile;
@@ -33,7 +30,7 @@ import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.emf.ecore.util.FeatureMap.Entry;
-import org.eclipse.emf.ecore.xmi.impl.XMLResourceImpl;
+import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.eclipse.ui.IWorkbenchPage;
 import org.eclipse.ui.statushandlers.StatusManager;
 import org.openscada.contrib.da.server.exporter.DocumentRoot;
@@ -51,7 +48,6 @@ import org.openscada.ui.databinding.SelectionHelper;
 import org.openscada.ui.utils.status.StatusHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
 
 public class StartExporter extends AbstractSelectionHandler
 {
@@ -81,6 +77,8 @@ public class StartExporter extends AbstractSelectionHandler
         final ResourceSetImpl resourceSet = new ResourceSetImpl ();
 
         resourceSet.getResourceFactoryRegistry ().getExtensionToFactoryMap ().put ( "*", new ExporterResourceFactoryImpl () );
+
+        resourceSet.getLoadOptions ().put ( XMLResource.OPTION_RECORD_ANY_TYPE_NAMESPACE_DECLARATIONS, Boolean.TRUE );
 
         final Resource resource = resourceSet.createResource ( URI.createURI ( file.getLocationURI ().toString () ) );
         resource.load ( null );
@@ -124,17 +122,7 @@ public class StartExporter extends AbstractSelectionHandler
     private Hive createHive ( final String ref, final FeatureMap featureMap ) throws Exception
     {
         final Entry first = featureMap.get ( 0 );
-
-        final XMLResourceImpl x = new XMLResourceImpl ();
-        final DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance ();
-        final DocumentBuilder db = dbf.newDocumentBuilder ();
-        final Document doc = db.newDocument ();
-
-        // convert ecore to dom
-        x.getContents ().add ( (EObject)first.getValue () );
-        x.save ( doc, null, null );
-
         final BundleContextHiveFactory factory = new BundleContextHiveFactory ( Activator.getDefault ().getBundle ().getBundleContext () );
-        return factory.createHive ( ref, doc.getDocumentElement () );
+        return factory.createHive ( ref, (EObject)first.getValue () );
     }
 }

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<exporter:configuration
+	xmlns:exporter="http://openscada.org/DA/Server/Exporter"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:epanet="http://openscada.org/DA/Server/EPANET/Simulator/Configuration"
+	xsi:schemaLocation="http://openscada.org/DA/Server/Exporter schema/configuration.xsd 
+	http://openscada.org/DA/Server/EPANET/Simulator/Configuration epanet.xsd">
+	<exporter:hive ref="org.openscada.contrib.epanet.simulator.Hive">
+		<exporter:configuration>
+			<epanet:configuration
+					file="configuration/sample1.inp"
+					type="INP">
+			</epanet:configuration>
+		</exporter:configuration>
+		<exporter:export uri="da:ngp://0.0.0.0:2101" />
+	</exporter:hive>
+</exporter:configuration>
