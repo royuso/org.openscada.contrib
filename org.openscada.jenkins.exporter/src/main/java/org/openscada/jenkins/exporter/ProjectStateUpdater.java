@@ -33,7 +33,10 @@ public class ProjectStateUpdater
 
     public void update ( final Run<?, ?> run )
     {
-        this.projectState.setRunning ( run.isBuilding () );
-        this.projectState.setResult ( run.getResult () );
+        if ( run != null )
+        {
+            this.projectState.setRunning ( run.isBuilding () );
+            this.projectState.setResult ( run.getResult () );
+        }
     }
 }
