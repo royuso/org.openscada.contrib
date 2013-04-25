@@ -16,7 +16,7 @@
 	</properties>
 
 	<groupId>org.openscada.jenkins</groupId>
-	<artifactId>org.openscada.jenkins.exporter</artifactId>
+	<artifactId>openscada-jenkins-exporter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	
@@ -219,6 +219,12 @@
 			<groupId>org.openscada.aurora</groupId>
 			<artifactId>org.openscada.core.info</artifactId>
 			<version>1.0.0.qualifier</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.openscada.aurora</groupId>
+			<artifactId>org.openscada.sec.utils</artifactId>
+			<version>1.1.0.qualifier</version>
 		</dependency>
 
 		<dependency>

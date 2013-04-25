@@ -160,14 +160,13 @@ public class ProjectManager
     public void setPassword ( final String password )
     {
         this.password = password;
-        if ( this.hive != null )
-        {
-            applyPassword ( this.hive, password );
-        }
+        applyPassword ( this.hive, password );
     }
 
     private void applyPassword ( final HiveImpl hive, final String password )
     {
+        logger.info ( "Configure password" );
+
         if ( hive == null )
         {
             return;
@@ -175,6 +174,7 @@ public class ProjectManager
 
         if ( password != null && !password.isEmpty () )
         {
+            logger.info ( "Using provided password authentication" );
             hive.setAuthenticationImplementation ( new ProvidedPasswordAuthentication ( password ) );
         }
         else

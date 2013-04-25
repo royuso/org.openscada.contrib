@@ -38,39 +38,40 @@ import org.kohsuke.stapler.StaplerRequest;
 public class Exporter extends GlobalConfiguration
 {
 
-    private volatile int port = 2101;
+    private int openscadaPort = 2101;
 
-    private ProjectManager manager;
+    private transient ProjectManager manager;
 
-    private String password;
+    private String openscadaPassword;
 
     public Exporter ()
     {
         load ();
     }
 
-    public void setPort ( final int port )
+    public void setOpenscadaPort ( final int port )
     {
-        this.port = port;
+        this.openscadaPort = port;
         this.manager.setPort ( port );
     }
 
-    public int getPort ()
+    public int getOpenscadaPort ()
     {
-        return this.port;
+        return this.openscadaPort;
     }
 
-    private void setPassword ( final String password )
+    private void setOpenscadaPassword ( final String password )
     {
-        this.password = password;
+        this.openscadaPassword = password;
         this.manager.setPassword ( password );
     }
 
     @Override
     public boolean configure ( final StaplerRequest req, final JSONObject json ) throws FormException
     {
-        setPort ( new ServerTcpPort ( json.getJSONObject ( "port" ) ).getPort () );
-        setPassword ( json.getString ( "password" ) );
+        setOpenscadaPort ( new ServerTcpPort ( json.getJSONObject ( "openscadaPort" ) ).getPort () );
+        setOpenscadaPassword ( json.getString ( "openscadaPassword" ) );
+        save ();
         return true;
     }
 
@@ -88,7 +89,8 @@ public class Exporter extends GlobalConfiguration
     public void start ()
     {
         this.manager = new ProjectManager ( this );
-        this.manager.setPort ( this.port );
+        this.manager.setPort ( this.openscadaPort );
+        this.manager.setPassword ( this.openscadaPassword );
 
         for ( final Job<?, ?> project : Jenkins.getInstance ().getAllItems ( Job.class ) )
         {

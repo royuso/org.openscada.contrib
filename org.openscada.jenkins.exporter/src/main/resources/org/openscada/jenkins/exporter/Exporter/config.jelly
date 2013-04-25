@@ -13,11 +13,11 @@
   -->
   
   <f:section title="openSCADA Exporter">
-  	<f:entry title="Exporter port" field="port"
+  	<f:entry title="Exporter port" field="openscadaPort"
   	  description="The port number to use by the openSCADA NGP exporter">
   	  <f:serverTcpPort />
   	</f:entry>
-  	<f:entry title="Logon password" field="password"
+  	<f:entry title="Logon password" field="openscadaPassword"
   		description="The password the user needs in order to log on">
   	 <f:password />
 	</f:entry>
