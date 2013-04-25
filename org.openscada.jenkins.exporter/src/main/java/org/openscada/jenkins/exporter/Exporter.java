@@ -23,7 +23,7 @@ package org.openscada.jenkins.exporter;
 import hudson.Extension;
 import hudson.init.InitMilestone;
 import hudson.init.Initializer;
-import hudson.model.Job;
+import hudson.model.AbstractProject;
 
 import java.io.IOException;
 
@@ -92,7 +92,7 @@ public class Exporter extends GlobalConfiguration
         this.manager.setPort ( this.openscadaPort );
         this.manager.setPassword ( this.openscadaPassword );
 
-        for ( final Job<?, ?> project : Jenkins.getInstance ().getAllItems ( Job.class ) )
+        for ( final AbstractProject<?, ?> project : Jenkins.getInstance ().getAllItems ( AbstractProject.class ) )
         {
             this.manager.addProject ( project.getFullName (), project.getLastBuild () );
         }
