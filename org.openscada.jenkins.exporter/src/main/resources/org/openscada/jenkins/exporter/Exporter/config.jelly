@@ -17,6 +17,10 @@
   	  description="The port number to use by the openSCADA NGP exporter">
   	  <f:serverTcpPort />
   	</f:entry>
+  	<f:entry title="Logon password" field="password"
+  		description="The password the user needs in order to log on">
+  	 <f:password />
+	</f:entry>
   </f:section>
   
 </j:jelly>

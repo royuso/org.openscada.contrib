@@ -20,39 +20,35 @@
 
 package org.openscada.jenkins.exporter;
 
-import org.openscada.da.server.browser.common.FolderCommon;
-import org.openscada.da.server.common.ValidationStrategy;
-import org.openscada.da.server.common.impl.HiveCommon;
-import org.openscada.sec.AuthenticationImplementation;
+import hudson.Extension;
+import hudson.model.Item;
+import hudson.model.Job;
+import hudson.model.listeners.ItemListener;
 
-public class HiveImpl extends HiveCommon
+@Extension
+public class ItemNotifier extends ItemListener
 {
-
-    private final FolderCommon folder;
-
-    public HiveImpl ()
+    @Override
+    public void onCreated ( final Item item )
     {
-        this.folder = new FolderCommon ();
-        setRootFolder ( this.folder );
-        setValidatonStrategy ( ValidationStrategy.GRANT_ALL );
+        if ( ! ( item instanceof Job ) )
+        {
+            return;
+        }
+        Exporter.get ().getManager ().addProject ( item.getFullName (), ( (Job<?, ?>)item ).getLastBuild () );
     }
 
     @Override
-    public void setAuthenticationImplementation ( final AuthenticationImplementation authenticationImplementation )
+    public void onDeleted ( final Item item )
     {
-        super.setAuthenticationImplementation ( authenticationImplementation );
+        Exporter.get ().getManager ().removeProject ( item.getFullName () );
     }
 
     @Override
-    public FolderCommon getRootFolder ()
+    public void onRenamed ( final Item item, final String oldName, final String newName )
     {
-        return this.folder;
-    }
-
-    @Override
-    public String getHiveId ()
-    {
-        return "org.openscada.exporter.jenkins"; //$NON-NLS-1$
+        Exporter.get ().getManager ().removeProject ( oldName );
+        Exporter.get ().getManager ().addProject ( newName, ( (Job<?, ?>)item ).getLastBuild () );
     }
 
 }

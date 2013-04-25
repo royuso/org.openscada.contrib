@@ -31,6 +31,8 @@ import jenkins.model.Jenkins;
 
 import org.openscada.core.ConnectionInformation;
 import org.openscada.core.Variant;
+import org.openscada.core.server.common.DefaultAuthentication;
+import org.openscada.core.server.common.ProvidedPasswordAuthentication;
 import org.openscada.da.server.common.DataItemCommand;
 import org.openscada.da.server.common.DataItemCommand.Listener;
 import org.openscada.da.server.common.exporter.ObjectExporter;
@@ -52,6 +54,8 @@ public class ProjectManager
     private HiveImpl hive;
 
     private org.openscada.da.server.ngp.Exporter ngpExporter;
+
+    private String password;
 
     private static class ProjectStateExporter
     {
@@ -134,6 +138,15 @@ public class ProjectManager
         return project.getState ();
     }
 
+    public synchronized void removeProject ( final String id )
+    {
+        final ProjectStateExporter project = this.states.remove ( id );
+        if ( project != null )
+        {
+            project.unregister ();
+        }
+    }
+
     public synchronized ProjectState getState ( final String id )
     {
         final ProjectStateExporter state = this.states.get ( id );
@@ -142,6 +155,32 @@ public class ProjectManager
             return null;
         }
         return state.getState ();
+    }
+
+    public void setPassword ( final String password )
+    {
+        this.password = password;
+        if ( this.hive != null )
+        {
+            applyPassword ( this.hive, password );
+        }
+    }
+
+    private void applyPassword ( final HiveImpl hive, final String password )
+    {
+        if ( hive == null )
+        {
+            return;
+        }
+
+        if ( password != null && !password.isEmpty () )
+        {
+            hive.setAuthenticationImplementation ( new ProvidedPasswordAuthentication ( password ) );
+        }
+        else
+        {
+            hive.setAuthenticationImplementation ( new DefaultAuthentication () );
+        }
     }
 
     public void setPort ( final int portNumber )
@@ -189,6 +228,8 @@ public class ProjectManager
 
         this.hive = new HiveImpl ();
         this.hive.start ();
+        applyPassword ( this.hive, this.password );
+
         this.ngpExporter = new org.openscada.da.server.ngp.Exporter ( this.hive, ConnectionInformation.fromURI ( String.format ( "da:ngp://0.0.0.0:%s", this.portNumber ) ) );
         this.ngpExporter.start ();
 

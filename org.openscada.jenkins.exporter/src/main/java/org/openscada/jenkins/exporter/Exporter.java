@@ -42,6 +42,8 @@ public class Exporter extends GlobalConfiguration
 
     private ProjectManager manager;
 
+    private String password;
+
     public Exporter ()
     {
         load ();
@@ -58,11 +60,17 @@ public class Exporter extends GlobalConfiguration
         return this.port;
     }
 
+    private void setPassword ( final String password )
+    {
+        this.password = password;
+        this.manager.setPassword ( password );
+    }
+
     @Override
     public boolean configure ( final StaplerRequest req, final JSONObject json ) throws FormException
     {
         setPort ( new ServerTcpPort ( json.getJSONObject ( "port" ) ).getPort () );
-        // setPort ( json.getInt ( "port" ) );
+        setPassword ( json.getString ( "password" ) );
         return true;
     }
 
