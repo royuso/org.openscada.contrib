@@ -33,8 +33,8 @@
 		which proxies all the artifacts that we need -->
 	<repositories>
 		<repository>
-			<id>openscada.test</id>
-			<url>file:///tmp/openscada</url>
+			<id>openscada.snapshots</id>
+			<url>http://repo.openscada.org/maven</url>
 		</repository>
 		<repository>
 			<id>repo.jenkins-ci.org</id>
