@@ -45,7 +45,7 @@ public class ProjectManager
 
     private static final Logger logger = LoggerFactory.getLogger ( ProjectManager.class );
 
-    private final Map<String, ProjectStateExporter> states = new HashMap<String, ProjectStateExporter> ();
+    private final Map<String, StateExporter> states = new HashMap<String, StateExporter> ();
 
     private final Exporter exporter;
 
@@ -57,7 +57,7 @@ public class ProjectManager
 
     private String password;
 
-    private static class ProjectStateExporter
+    private static class ProjectStateExporter implements StateExporter
     {
         private final ProjectState state;
 
@@ -73,6 +73,7 @@ public class ProjectManager
             this.state = new ProjectState ();
         }
 
+        @Override
         public void register ( final HiveImpl hive )
         {
             logger.info ( "Register {} to hive: {}", this.id, hive );
@@ -97,6 +98,7 @@ public class ProjectManager
 
         }
 
+        @Override
         public void unregister ()
         {
             this.stateExporter.detachTarget ();
@@ -118,7 +120,8 @@ public class ProjectManager
     {
         logger.info ( "Adding project: {}", id );
 
-        ProjectStateExporter project = this.states.get ( id );
+        ProjectStateExporter project = adapt ( this.states.get ( id ), ProjectStateExporter.class );
+        // FIXME: could be a different type under the same name
         if ( project != null )
         {
             return project.getState ();
@@ -140,16 +143,31 @@ public class ProjectManager
 
     public synchronized void removeProject ( final String id )
     {
-        final ProjectStateExporter project = this.states.remove ( id );
+        final StateExporter project = this.states.remove ( id );
         if ( project != null )
         {
             project.unregister ();
         }
     }
 
+    private <T> T adapt ( final Object o, final Class<T> clazz )
+    {
+        if ( o == null )
+        {
+            return null;
+        }
+
+        if ( clazz.isAssignableFrom ( o.getClass () ) )
+        {
+            return clazz.cast ( o );
+        }
+
+        return null;
+    }
+
     public synchronized ProjectState getState ( final String id )
     {
-        final ProjectStateExporter state = this.states.get ( id );
+        final ProjectStateExporter state = adapt ( this.states.get ( id ), ProjectStateExporter.class );
         if ( state == null )
         {
             return null;
@@ -205,7 +223,7 @@ public class ProjectManager
 
     private void destroyServer () throws Exception
     {
-        for ( final ProjectStateExporter exporter : this.states.values () )
+        for ( final StateExporter exporter : this.states.values () )
         {
             exporter.unregister ();
         }
@@ -233,7 +251,7 @@ public class ProjectManager
         this.ngpExporter = new org.openscada.da.server.ngp.Exporter ( this.hive, ConnectionInformation.fromURI ( String.format ( "da:ngp://0.0.0.0:%s", this.portNumber ) ) );
         this.ngpExporter.start ();
 
-        for ( final ProjectStateExporter exporter : this.states.values () )
+        for ( final StateExporter exporter : this.states.values () )
         {
             exporter.register ( this.hive );
         }

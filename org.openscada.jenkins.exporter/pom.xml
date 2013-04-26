@@ -19,12 +19,12 @@
 	<artifactId>openscada-jenkins-exporter</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>hpi</packaging>
-	
+
 	<organization>
 		<name>openSCADA.org</name>
 		<url>http://openscada.org</url>
 	</organization>
-	
+
 	<scm>
 		<url>git://git.openscada.org/org.openscada.contrib.git</url>
 	</scm>
@@ -33,7 +33,7 @@
 		which proxies all the artifacts that we need -->
 	<repositories>
 		<repository>
-			<id>openscada</id>
+			<id>openscada.test</id>
 			<url>file:///tmp/openscada</url>
 		</repository>
 		<repository>
@@ -54,6 +54,15 @@
 	</pluginRepositories>
 
 	<build>
+
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-file</artifactId>
+				<version>2.2</version>
+			</extension>
+		</extensions>
+
 		<plugins>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -61,7 +70,6 @@
 				<version>${tycho-version}</version>
 				<extensions>true</extensions>
 			</plugin>
-
 
 			<plugin>
 				<groupId>org.apache.felix</groupId>
@@ -96,13 +104,13 @@
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.da.server.common</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.da.server.ngp</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<!-- manual deps -->
@@ -110,121 +118,121 @@
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.da.core.server</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.aurora</groupId>
 			<artifactId>org.openscada.core</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.core.server.common</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.aurora</groupId>
 			<artifactId>org.openscada.sec</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.oxygen</groupId>
 			<artifactId>org.openscada.core.data</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.oxygen</groupId>
 			<artifactId>org.openscada.da.data</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.da.core.common</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.aurora</groupId>
 			<artifactId>org.openscada.utils</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.core.server</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.core.subscription</artifactId>
-			<version>1.0.0.qualifier</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.aurora</groupId>
 			<artifactId>org.openscada.sec.auth.logon</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.aurora</groupId>
 			<artifactId>org.openscada.sec.audit.log.slf4j</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.oxygen</groupId>
 			<artifactId>org.openscada.protocol.ngp.common</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.oxygen</groupId>
 			<artifactId>org.openscada.core.protocol.ngp.codec</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.oxygen</groupId>
 			<artifactId>org.openscada.da.protocol.ngp.codec</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.core.server.ngp</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.da.common.ngp</artifactId>
-			<version>1.0.0.qualifier</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.atlantis</groupId>
 			<artifactId>org.openscada.core.ngp</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.openscada.aurora</groupId>
 			<artifactId>org.openscada.core.info</artifactId>
-			<version>1.0.0.qualifier</version>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.openscada.aurora</groupId>
 			<artifactId>org.openscada.sec.utils</artifactId>
-			<version>1.1.0.qualifier</version>
+			<version>1.1.0-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>

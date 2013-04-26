@@ -1,10 +1,10 @@
 /*
- * This file is part of the openSCADA import hudson.model.Result;
-
-import org.openscada.utils.beans.AbstractPropertyChange;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-it under the terms of the GNU Lesser General Public License version 3
+ * This file is part of the openSCADA project
+ * 
+ * Copyright (C) 2013 Jens Reimann (ctron@dentrassi.de)
+ *
+ * openSCADA is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Lesser General Public License version 3
  * only, as published by the Free Software Foundation.
  *
  * openSCADA is distributed in the hope that it will be useful,
