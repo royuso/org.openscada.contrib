@@ -1,0 +1,136 @@
+RoomModel etrice.test2.components {
+	
+	import room.basic.service.timing.* from "../../org.eclipse.etrice.modellib.java/models/TimingService.room"
+	import room.basic.types.* from "../../org.eclipse.etrice.modellib.java/models/Types.room"
+	import org.openscada.etrice.* from "../../org.openscada.etrice/model/org.openscada.etrice.room"
+
+	ActorClass MOV {
+		Interface {
+			Port stateProtocol : MOVProtocol
+		}
+		Structure {
+			external Port stateProtocol
+			SAP timer : PTimer
+			Attribute counter : int32 = "0"
+			Attribute MAX : int32 = "100"
+			Attribute SPEED : int32 = "2"
+			Attribute direction : int32 = "0"
+		}
+		Behavior {
+			Operation update (): void{
+				"stateProtocol.stateChanged ( counter <= 0, counter >= MAX, direction, makePercent () );"
+			}
+			
+			Operation makePercent () : float64 {
+				"return ((double)counter) / ((double)MAX);"
+			}
+			
+			StateMachine {
+				Transition init: initial -> closed { }
+				Transition tr0: closed -> opening {
+					triggers {
+						<open: stateProtocol>
+					}
+				}
+				Transition tr1: open -> closing {
+					triggers {
+						<close: stateProtocol>
+					}
+				}
+				Transition doOpened: cp isOpened -> open
+				Transition checkOpened: opening -> cp isOpened {
+					triggers {
+						<timeout: timer>
+					}
+					action {
+						"counter+=SPEED;"
+						"update();"
+					}
+				}
+				Transition stillOpening: cp isOpened -> opening {
+					cond {
+						"counter<MAX"
+					}
+				}
+				Transition doClosed: cp checkClosing -> closed
+				Transition checkClosed: closing -> cp checkClosing {
+					triggers {
+						<timeout: timer>
+					}
+					action {
+						"counter-=SPEED; if (counter < 0 ) counter = 0;"
+					}
+				}
+				Transition stillClosing: cp checkClosing -> closing {
+					cond {
+						"counter>0\n"
+					}
+				}
+				Transition requestClose: opening -> closing {
+					triggers {
+						<close: stateProtocol>
+					}
+				}
+				Transition requestOpen: closing -> opening {
+					triggers {
+						<open: stateProtocol>
+					}
+				}
+				ChoicePoint isOpened
+				ChoicePoint checkClosing
+				State closed {
+					entry {
+						"direction=0;"
+						"counter=0;"
+						"update();"
+					}
+				}
+				State opening {
+					entry {
+						"direction=1;"
+						"timer.startTimeout(250);"
+						"update();"
+					}
+					exit {
+						"timer.kill();"
+					}
+				}
+				State open {
+					entry {
+						"direction=0;"
+						"counter=MAX;"
+						"update();"
+					}
+				}
+				State closing {
+					entry {
+						"direction=-1;"
+						"timer.startTimeout(250);"
+						"update();"
+					}
+					exit {
+						"timer.kill();"
+					}
+				}
+			}
+		}
+	}
+
+	ProtocolClass MOVProtocol {
+		incoming {
+			Message open ()
+			Message close ()
+		}
+		outgoing {
+			Message stateChanged ( state : MOVState )
+		}
+	}
+
+	DataClass MOVState {
+		Attribute openState : boolean
+		Attribute closeState : boolean
+		Attribute transitDirection : int32
+		Attribute percentOpen : float64
+	}
+
+}

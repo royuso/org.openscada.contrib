@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: eTrice Test 2
+Bundle-SymbolicName: etrice.test2;singleton:=true
+Bundle-Version: 0.1.0.qualifier
+Export-Package: etrice.test2
+Bundle-Vendor: openSCADA.org
+Import-Package: org.eclipse.equinox.app;version="1.1.0",
+ org.eclipse.etrice.runtime.java.debugging;version="0.2.0",
+ org.eclipse.etrice.runtime.java.messaging;version="0.2.0",
+ org.eclipse.etrice.runtime.java.modelbase;version="0.2.0",
+ org.openscada.core;version="1.1.0",
+ org.openscada.etrice;version="0.1.0",
+ room.basic.service.timing;version="0.2.0"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

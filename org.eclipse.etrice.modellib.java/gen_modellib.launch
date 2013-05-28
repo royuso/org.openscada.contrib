@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<launchConfiguration type="org.eclipse.etrice.generator.launch.java.launchConfigurationType">
+<booleanAttribute key="GenInstanceDiagram" value="false"/>
+<stringAttribute key="GenModelPath" value=""/>
+<booleanAttribute key="Lib" value="true"/>
+<listAttribute key="ModelFiles">
+<listEntry value="${workspace_loc:/org.eclipse.etrice.modellib.java/models/Socket.room}"/>
+<listEntry value="${workspace_loc:/org.eclipse.etrice.modellib.java/models/TimingService.room}"/>
+<listEntry value="${workspace_loc:/org.eclipse.etrice.modellib.java/models/ALogService.room}"/>
+<listEntry value="${workspace_loc:/org.eclipse.etrice.modellib.java/models/TcpService.room}"/>
+</listAttribute>
+<booleanAttribute key="SaveGenModel" value="false"/>
+<stringAttribute key="org.eclipse.debug.core.ATTR_REFRESH_SCOPE" value="${workspace}"/>
+</launchConfiguration>

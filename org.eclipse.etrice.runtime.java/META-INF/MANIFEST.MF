@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: eTrice Runtime Java
+Bundle-SymbolicName: org.eclipse.etrice.runtime.java
+Bundle-Version: 0.2.0.qualifier
+Export-Package: org.eclipse.etrice.runtime.java.config;version="0.2.0",
+ org.eclipse.etrice.runtime.java.debugging;version="0.2.0";uses:="org.eclipse.etrice.runtime.java.modelbase,org.eclipse.etrice.runtime.java.messaging",
+ org.eclipse.etrice.runtime.java.etunit;version="0.2.0",
+ org.eclipse.etrice.runtime.java.messaging;version="0.2.0";uses:="org.eclipse.etrice.runtime.java.modelbase",
+ org.eclipse.etrice.runtime.java.modelbase;version="0.2.0";uses:="org.eclipse.etrice.runtime.java.messaging"
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6

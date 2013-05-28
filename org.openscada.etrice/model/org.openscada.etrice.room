@@ -1,0 +1,235 @@
+RoomModel org.openscada.etrice {
+	
+	import room.basic.types.* from "platform:/resource/org.eclipse.etrice.modellib.java/models/Types.room"
+	
+	PrimitiveType variant: ptCharacter -> org.openscada.core.Variant (org.openscada.core.Variant) default "Variant.NULL"
+	
+	ActorClass NamedClientDataItem {
+		
+		Interface {
+			Port item : ClientItemProtocol
+		}
+		
+		Structure {
+			
+			usercode1 {
+				"import org.openscada.etrice.ConnectionManagerWrapper;"
+				"import org.openscada.da.client.DataItem;"
+				"import org.openscada.core.VariantEditor;"
+			}
+			
+			usercode2 {
+				"private ConnectionManagerWrapper wrapper;"
+				"private DataItem dataItem;"
+			}
+			
+			external Port item
+			
+			Attribute connectionUri : string
+			Attribute itemId : string
+		}
+		
+		Behavior {
+			Operation initUser () {
+				"this.wrapper = new ConnectionManagerWrapper ();"
+				"this.dataItem = wrapper.getConnectionManager().getItem ( this.connectionUri, this.itemId, this.item );"
+			}
+			Operation destroyUser () {
+				"this.wrapper.dispose ();"
+				"this.wrapper = null;"
+			}
+			StateMachine{
+				Transition init: initial -> initialized { }
+				
+				Transition doWrite: initialized -> initialized {
+					triggers {
+						<write: item>
+					}
+					action{
+						"this.wrapper.getConnectionManager().write ( this.connectionUri, this.itemId,  value );"
+					}
+				}
+				
+				State initialized
+			}
+		}
+	}
+	
+ 	ActorClass NamedServerDataItem {
+		
+		Interface {
+			Port item : ServerItemProtocol
+		}
+		Structure {
+			usercode1{
+				"import org.openscada.da.server.common.chain.DataItemInputOutputChained;"
+				"import org.openscada.core.VariantEditor;"
+			}
+			usercode2 {
+				"private HiveWrapper hiveWrapper;"
+				"private DataItemInputOutputChained dataItem;"
+			}
+			
+			external Port item
+			
+			Attribute itemId : string
+		}
+		Behavior {
+			Operation initUser () {
+				"this.hiveWrapper =  new HiveWrapper ();"
+				"this.dataItem = this.hiveWrapper.getHive ().registerItem ( itemId, this.item);"
+			}
+			Operation destroyUser () {
+				"if ( this.dataItem != null ) {"
+				"  this.hiveWrapper.getHive ().unregisterItem ( this.dataItem );"
+				"  this.dataItem = null; }"
+				
+				"this.hiveWrapper.dispose ();"
+				"this.hiveWrapper = null;"
+				 
+				
+			}
+			StateMachine {
+				Transition init: initial -> registered { }
+				Transition doUpdate : registered -> registered {
+					triggers {
+						<update: item>
+					}
+					action{
+						"this.dataItem.updateData ( value, null, null );"
+					}
+				}
+				State registered
+			}
+		}
+	}
+	
+ 	ActorClass RegisteredServerDataItem {
+		
+		Interface {
+			Port registration : RegisterItemProtocol
+			Port item : ServerItemProtocol
+			Port digital : ServerDigitalInput
+			Port analogInt : ServerAnalogIntegerInput
+			Port analogFloat : ServerAnalogFloatInput
+		}
+		Structure {
+			usercode1{
+				"import org.openscada.da.server.common.chain.DataItemInputOutputChained;"
+				"import org.openscada.core.VariantEditor;"
+				"import org.openscada.core.Variant;"
+			}
+			usercode2 {
+				"private HiveWrapper hiveWrapper;"
+				"private DataItemInputOutputChained dataItem;"
+			}
+			external Port registration
+			external Port item
+			external Port digital
+			external Port analogInt
+			external Port analogFloat
+		}
+		Behavior {
+			Operation initUser () {
+				"this.hiveWrapper =  new HiveWrapper ();"
+			}
+			Operation destroyUser () {
+				"if ( this.dataItem != null ) {"
+				"  this.hiveWrapper.getHive ().unregisterItem ( this.dataItem );"
+				"  this.dataItem = null; }"
+				
+				"this.hiveWrapper.dispose ();"
+				"this.hiveWrapper = null;"
+				
+			}
+			StateMachine {
+				Transition init: initial -> unconfigured { }
+				Transition doRegister: unconfigured -> registered {
+					triggers {
+						<register: registration>
+					}
+					action {
+						"this.dataItem = this.hiveWrapper.getHive ().registerItem ( itemId, this.item);"
+					}
+				}
+				Transition doUpdateDigital : registered -> registered {
+					triggers {
+						<updateDigital: digital>
+					}
+					action{
+						"this.dataItem.updateData ( Variant.valueOf ( value ) , null, null );"
+					}
+				}
+				Transition doUpdateAnalogInteger : registered -> registered {
+					triggers {
+						<updateInteger: analogInt>
+					}
+					action{
+						"this.dataItem.updateData ( Variant.valueOf ( value ) , null, null );"
+					}
+				}
+					Transition doUpdateAnalogFloat: registered -> registered {
+					triggers {
+						<updateFloat: analogFloat>
+					}
+					action{
+						"this.dataItem.updateData ( Variant.valueOf ( value ) , null, null );"
+					}
+				}
+				Transition doUpdate : registered -> registered {
+					triggers {
+						<update: item>
+					}
+					action{
+						"this.dataItem.updateData ( value, null, null );"
+					}
+				}
+				State registered
+				State unconfigured
+			}
+		}
+	}
+	
+	ProtocolClass RegisterItemProtocol {
+		incoming {
+			Message register ( itemId : string )
+		}
+	}
+	
+	ProtocolClass ServerDigitalInput {
+		incoming {
+			Message updateDigital ( value : boolean )
+		}
+	}
+	
+	ProtocolClass ServerAnalogIntegerInput {
+		incoming {
+			Message updateInteger ( value : int32 )
+		}
+	}
+	
+	ProtocolClass ServerAnalogFloatInput {
+		incoming {
+			Message updateFloat ( value : float64 )
+		}
+	}
+	
+	ProtocolClass ServerItemProtocol {
+		incoming {
+			Message update ( value : variant )
+		}
+		outgoing {
+			Message writeCall ( value : variant )
+		}
+	}
+	
+	ProtocolClass ClientItemProtocol {
+		incoming {
+			Message write ( value : variant )
+		}
+		outgoing {
+			Message updateValue ( value : variant )
+			Message updateState ( connected : boolean )
+		}
+	}
+}
