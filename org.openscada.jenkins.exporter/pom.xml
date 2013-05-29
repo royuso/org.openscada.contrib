@@ -17,7 +17,7 @@
 
 	<groupId>org.openscada.jenkins</groupId>
 	<artifactId>openscada-jenkins-exporter</artifactId>
-	<version>0.0.1</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 
 	<organization>
@@ -27,6 +27,7 @@
 
 	<scm>
 		<connection>scm:git:git://git.openscada.org/org.openscada.contrib.git</connection>
+		<developerConnection>scm:git:git://git.openscada.org/org.openscada.contrib.git</developerConnection>
 		<url>git://git.openscada.org/org.openscada.contrib.git</url>
 	</scm>
 
