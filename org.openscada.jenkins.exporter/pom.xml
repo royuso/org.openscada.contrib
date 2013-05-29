@@ -19,6 +19,16 @@
 	<artifactId>openscada-jenkins-exporter</artifactId>
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>hpi</packaging>
+	
+	<url>http://wiki.jenkins-ci.org/display/JENKINS/openSCADA+Exportern</url>
+
+	<developers>
+		<developer>
+			<id>ctron</id>
+			<name>Jens Reimann</name>
+			<email>ctron@dentrassi.de</email>
+		</developer>
+	</developers>
 
 	<organization>
 		<name>openSCADA.org</name>
