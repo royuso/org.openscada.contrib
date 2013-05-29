@@ -27,7 +27,6 @@
 
 	<scm>
 		<connection>scm:git:git://git.openscada.org/org.openscada.contrib.git</connection>
-		<developerConnection>scm:git:git://git.openscada.org/org.openscada.contrib.git</developerConnection>
 		<url>git://git.openscada.org/org.openscada.contrib.git</url>
 	</scm>
 
