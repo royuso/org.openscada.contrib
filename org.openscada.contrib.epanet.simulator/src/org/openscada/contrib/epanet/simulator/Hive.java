@@ -131,6 +131,11 @@ public class Hive extends HiveCommon
     @Override
     public void start () throws Exception
     {
+        if ( this.executor != null )
+        {
+            return;
+        }
+
         this.executor = Executors.newSingleThreadScheduledExecutor ( new NamedThreadFactory ( "org.openscada.contrib.epanet.simulator/HydraulicSimulator" ) );
         this.executor.execute ( this.runOnce );
 
@@ -170,6 +175,11 @@ public class Hive extends HiveCommon
     @Override
     public void stop () throws Exception
     {
+        if ( this.executor == null )
+        {
+            return;
+        }
+
         this.hydExporter.stop ();
 
         super.stop ();
