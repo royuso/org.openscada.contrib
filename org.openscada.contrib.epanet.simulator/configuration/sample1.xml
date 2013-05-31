@@ -8,7 +8,7 @@
 	<exporter:hive ref="org.openscada.contrib.epanet.simulator.Hive">
 		<exporter:configuration>
 			<epanet:configuration
-					file="configuration/sample1.inp"
+					file="sample1.inp"
 					type="INP">
 			</epanet:configuration>
 		</exporter:configuration>
