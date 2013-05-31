@@ -22,7 +22,6 @@ package org.openscada.contrib.epanet.simulator;
 import org.openscada.da.core.server.Hive;
 import org.openscada.da.core.server.HiveCreator;
 import org.openscada.da.server.epanet.simulator.configuration.ConfigurationType;
-import org.w3c.dom.Node;
 
 public class HiveCreatorImpl implements HiveCreator
 {
@@ -32,11 +31,7 @@ public class HiveCreatorImpl implements HiveCreator
     {
         if ( org.openscada.contrib.epanet.simulator.Hive.class.getName ().equals ( reference ) )
         {
-            if ( configuration instanceof Node )
-            {
-                return new org.openscada.contrib.epanet.simulator.Hive ( (Node)configuration );
-            }
-            else if ( configuration instanceof ConfigurationType )
+            if ( configuration instanceof ConfigurationType )
             {
                 return new org.openscada.contrib.epanet.simulator.Hive ( (ConfigurationType)configuration );
             }
