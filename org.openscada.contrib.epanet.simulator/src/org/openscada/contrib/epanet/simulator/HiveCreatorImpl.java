@@ -20,7 +20,7 @@
 package org.openscada.contrib.epanet.simulator;
 
 import org.openscada.da.core.server.Hive;
-import org.openscada.da.server.common.HiveCreator;
+import org.openscada.da.core.server.HiveCreator;
 import org.openscada.da.server.epanet.simulator.configuration.ConfigurationType;
 import org.w3c.dom.Node;
 
