@@ -30,23 +30,16 @@ import org.addition.epanet.network.Network.FileType;
 import org.addition.epanet.network.io.input.InputParser;
 import org.addition.epanet.util.ENException;
 import org.eclipse.emf.common.util.URI;
-import org.eclipse.emf.ecore.resource.Resource;
-import org.eclipse.emf.ecore.resource.ResourceSet;
-import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.emf.ecore.xmi.XMLResource;
 import org.openscada.contrib.epanet.simulator.exporter.HydraulicExporter;
 import org.openscada.da.server.browser.common.FolderCommon;
 import org.openscada.da.server.common.ValidationStrategy;
 import org.openscada.da.server.common.impl.HiveCommon;
-import org.openscada.da.server.epanet.simulator.configuration.ConfigurationPackage;
 import org.openscada.da.server.epanet.simulator.configuration.ConfigurationType;
 import org.openscada.da.server.epanet.simulator.configuration.TypeType;
-import org.openscada.da.server.epanet.simulator.configuration.util.ConfigurationResourceFactoryImpl;
 import org.openscada.utils.concurrent.NamedThreadFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
-import org.w3c.dom.Node;
 
 public class Hive extends HiveCommon
 {
@@ -85,12 +78,6 @@ public class Hive extends HiveCommon
         setValidatonStrategy ( ValidationStrategy.GRANT_ALL );
     }
 
-    public Hive ( final Node node ) throws Exception
-    {
-        this ();
-        configure ( node );
-    }
-
     public Hive ( final ConfigurationType configuration ) throws Exception
     {
         this ();
@@ -101,25 +88,6 @@ public class Hive extends HiveCommon
     public FolderCommon getRootFolder ()
     {
         return this.rootFolder;
-    }
-
-    private void configure ( final Node node ) throws Exception
-    {
-        ConfigurationPackage.eINSTANCE.eClass ();
-
-        final ResourceSet rs = new ResourceSetImpl ();
-        rs.getResourceFactoryRegistry ().getExtensionToFactoryMap ().put ( Resource.Factory.Registry.DEFAULT_EXTENSION, new ConfigurationResourceFactoryImpl () );
-
-        final XMLResource res = (XMLResource)rs.createResource ( URI.createURI ( "urn:dummy" ) );
-
-        res.getDefaultLoadOptions ().put ( XMLResource.OPTION_DOM_USE_NAMESPACES_IN_SCOPE, Boolean.TRUE );
-        res.getDefaultLoadOptions ().put ( XMLResource.OPTION_SUPPRESS_DOCUMENT_ROOT, Boolean.TRUE );
-
-        res.load ( node, null );
-
-        final ConfigurationType cfg = (ConfigurationType)res.getContents ().get ( 0 );
-
-        configure ( cfg );
     }
 
     private void configure ( final ConfigurationType cfg ) throws ENException
@@ -136,9 +104,15 @@ public class Hive extends HiveCommon
             fileType = FileType.valueOf ( type.getLiteral () + "_FILE" );
         }
 
+        final URI uri = cfg.eResource ().getURI ();
+
+        URI fileUri = URI.createFileURI ( fileName );
+        fileUri = fileUri.resolve ( uri );
+        logger.debug ( "Resolved file {} to {}", fileName, fileUri );
+
         final InputParser parser = InputParser.create ( fileType, this.julLogger );
         this.network = new Network ();
-        parser.parse ( this.network, new File ( fileName ) );
+        parser.parse ( this.network, new File ( fileUri.toFileString () ) );
 
         // run infinite
         this.network.getPropertiesMap ().setDuration ( Long.MAX_VALUE );
