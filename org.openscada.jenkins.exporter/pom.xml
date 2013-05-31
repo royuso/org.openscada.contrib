@@ -20,7 +20,7 @@
 	<version>0.0.2-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	
-	<url>http://wiki.jenkins-ci.org/display/JENKINS/openSCADA+Exportern</url>
+	<url>http://wiki.jenkins-ci.org/display/JENKINS/openSCADA+Exporter</url>
 
 	<developers>
 		<developer>
