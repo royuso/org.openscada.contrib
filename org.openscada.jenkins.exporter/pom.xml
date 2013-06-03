@@ -281,4 +281,5 @@
 
 	</dependencies>
 	<name>openSCADA Exporter</name>
+	<description>This is a plugin which exports all kinds of information (like build job status) using the openSCADA DA protocol. The protocol is using an even driven way instead of letting clients poll the recent status.</description>
 </project>
