@@ -17,7 +17,7 @@
 
 	<groupId>org.openscada.jenkins</groupId>
 	<artifactId>openscada-jenkins-exporter</artifactId>
-	<version>0.0.2</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/openSCADA+Exporter</url>
