@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.516</version>
+		<version>1.480.3</version>
 		<!-- which version of Jenkins is this plugin built against? -->
 	</parent>
 
@@ -17,7 +17,7 @@
 
 	<groupId>org.openscada.jenkins</groupId>
 	<artifactId>openscada-jenkins-exporter</artifactId>
-	<version>0.0.2-SNAPSHOT</version>
+	<version>0.0.3-SNAPSHOT</version>
 	<packaging>hpi</packaging>
 	
 	<url>http://wiki.jenkins-ci.org/display/JENKINS/openSCADA+Exporter</url>
@@ -280,4 +280,6 @@
 		</dependency>
 
 	</dependencies>
+	<name>openSCADA Exporter</name>
+	<description>This is a plugin which exports all kinds of information (like build job status) using the openSCADA DA protocol. The protocol is using an even driven way instead of letting clients poll the recent status.</description>
 </project>
