@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scr:component xmlns:scr="http://www.osgi.org/xmlns/scr/v1.1.0" enabled="false" name="org.openscada.da.server.snmp.mibble">
+   <implementation class="org.openscada.da.server.snmp.mibble.MibbleMIBManager"/>
+   <service>
+      <provide interface="org.openscada.da.server.snmp.mib.MibManager"/>
+   </service>
+</scr:component>
