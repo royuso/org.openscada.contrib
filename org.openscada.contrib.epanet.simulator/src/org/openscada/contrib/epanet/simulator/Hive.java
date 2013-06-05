@@ -84,7 +84,6 @@ public class Hive extends HiveCommon
         configure ( configuration );
     }
 
-    @Override
     public FolderCommon getRootFolder ()
     {
         return this.rootFolder;
