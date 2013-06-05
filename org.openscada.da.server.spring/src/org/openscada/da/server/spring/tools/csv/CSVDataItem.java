@@ -32,7 +32,6 @@ import org.openscada.da.server.common.DataItemInformationBase;
 import org.openscada.da.server.common.chain.MemoryItemChained;
 import org.openscada.da.server.common.chain.item.ChainCreator;
 import org.openscada.da.server.spring.Hive;
-import org.openscada.da.server.spring.TestErrorChainItem;
 import org.openscada.utils.concurrent.InstantErrorFuture;
 import org.openscada.utils.concurrent.NotifyFuture;
 
@@ -44,8 +43,7 @@ public class CSVDataItem extends MemoryItemChained
     public CSVDataItem ( final Hive hive, final String name, final EnumSet<IODirection> ioDirection )
     {
         super ( new DataItemInformationBase ( name, ioDirection ) );
-        this.addChainElement ( IODirection.INPUT, new TestErrorChainItem () );
-        ChainCreator.applyDefaultInputChain ( this, hive );
+        ChainCreator.applyDefaultInputChain ( this );
     }
 
     @Override

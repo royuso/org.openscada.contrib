@@ -21,11 +21,8 @@ package org.openscada.da.server.spring;
 
 import org.openscada.da.server.common.DataItem;
 import org.openscada.da.server.common.ValidationStrategy;
-import org.openscada.da.server.common.chain.storage.ChainStorageService;
-import org.openscada.da.server.common.chain.storage.ChainStorageServiceHelper;
 import org.openscada.da.server.common.factory.DataItemFactory;
 import org.openscada.da.server.common.factory.DataItemValidator;
-import org.openscada.da.server.common.factory.FactoryTemplate;
 import org.openscada.da.server.common.impl.HiveCommon;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -36,24 +33,11 @@ public class Hive extends HiveCommon implements InitializingBean, ApplicationCon
 {
     private ApplicationContext ctx;
 
-    private boolean enableChainPersistenceService = true;
-
-    private ChainStorageService chainPersistenceService;
-
     private ValidationStrategy validationStrategy = ValidationStrategy.GRANT_ALL;
 
     protected void setup ()
     {
         setValidatonStrategy ( this.validationStrategy );
-
-        if ( this.enableChainPersistenceService )
-        {
-            ChainStorageServiceHelper.registerDefaultPropertyService ( this );
-        }
-        else if ( this.chainPersistenceService != null )
-        {
-            ChainStorageServiceHelper.registerService ( this, this.chainPersistenceService );
-        }
 
         for ( final String beanName : this.ctx.getBeanNamesForType ( DataItemValidator.class ) )
         {
@@ -97,16 +81,6 @@ public class Hive extends HiveCommon implements InitializingBean, ApplicationCon
     public void setApplicationContext ( final ApplicationContext ctx ) throws BeansException
     {
         this.ctx = ctx;
-    }
-
-    public void setEnableChainPersistenceService ( final boolean enableChainPersistenceService )
-    {
-        this.enableChainPersistenceService = enableChainPersistenceService;
-    }
-
-    public void setChainPersistenceService ( final ChainStorageService chainPersistenceService )
-    {
-        this.chainPersistenceService = chainPersistenceService;
     }
 
     public void setValidationStrategy ( final ValidationStrategy validationStrategy )
