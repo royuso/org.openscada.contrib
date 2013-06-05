@@ -14,7 +14,6 @@ Import-Package: org.apache.commons.beanutils;version="1.8.0",
  org.openscada.da.server.common;version="1.0.0",
  org.openscada.da.server.common.chain;version="1.0.0",
  org.openscada.da.server.common.chain.item;version="1.0.0",
- org.openscada.da.server.common.chain.storage;version="1.0.0",
  org.openscada.da.server.common.factory;version="1.0.0",
  org.openscada.da.server.common.impl;version="1.0.0",
  org.openscada.sec;version="1.0.0",
@@ -50,7 +49,7 @@ Export-Package: org.openscada.da.server.spring;version="1.1.0";
    org.openscada.core,
    org.springframework.core.task,
    org.springframework.beans.factory"
-Bundle-Version: 1.1.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Name: openSCADA DA Server Spring
 Bundle-Vendor: openSCADA.org
 Bundle-SymbolicName: org.openscada.da.server.spring
