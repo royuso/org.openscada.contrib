@@ -3,7 +3,7 @@
    <feature url="features/org.openscada.contrib.external.spring_3.1.2.jar" id="org.openscada.contrib.external.spring" version="3.1.2">
       <category name="org.openscada.external.category"/>
    </feature>
-   <feature url="features/org.openscada.contrib_1.1.0.qualifier.jar" id="org.openscada.contrib" version="1.1.0.qualifier">
+   <feature url="features/org.openscada.contrib_1.2.0.qualifier.jar" id="org.openscada.contrib" version="1.2.0.qualifier">
       <category name="org.openscada.contrib.category"/>
    </feature>
    <category-def name="org.openscada.contrib.category" label="Additional Stuff"/>

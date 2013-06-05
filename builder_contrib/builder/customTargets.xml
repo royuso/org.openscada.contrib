@@ -116,6 +116,8 @@
   	<openscada.builder.copyPlugin id="org.openscada.spring.client"/>
   	<openscada.builder.copyPlugin id="org.openscada.spring.server"/>
   	
+  	<openscada.builder.copyPlugin id="org.openscada.da.server.snmp.mibble"/>
+  	
   	<openscada.builder.copyPlugin id="org.openscada.da.server.exporter.spring"/>
   	
   </target>
