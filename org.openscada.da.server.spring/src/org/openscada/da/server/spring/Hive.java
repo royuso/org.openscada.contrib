@@ -49,11 +49,6 @@ public class Hive extends HiveCommon implements InitializingBean, ApplicationCon
             addItemFactory ( (DataItemFactory)this.ctx.getBean ( beanName ) );
         }
 
-        for ( final String beanName : this.ctx.getBeanNamesForType ( FactoryTemplate.class ) )
-        {
-            registerTemplate ( (FactoryTemplate)this.ctx.getBean ( beanName ) );
-        }
-
         for ( final String beanName : this.ctx.getBeanNamesForType ( DataItem.class ) )
         {
             registerItem ( (DataItem)this.ctx.getBean ( beanName ) );
