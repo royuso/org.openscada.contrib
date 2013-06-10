@@ -1,5 +1,6 @@
 package org.openscada.doc.translator.ngp;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,10 +21,16 @@ import org.openscada.doc.model.doc.map.SectionMarker;
 import org.openscada.protocol.ngp.model.Protocol.Attribute;
 import org.openscada.protocol.ngp.model.Protocol.AttributeStructure;
 import org.openscada.protocol.ngp.model.Protocol.Enum;
+import org.openscada.protocol.ngp.model.Protocol.EnumAttribute;
 import org.openscada.protocol.ngp.model.Protocol.Interface;
 import org.openscada.protocol.ngp.model.Protocol.Message;
 import org.openscada.protocol.ngp.model.Protocol.Protocol;
 import org.openscada.protocol.ngp.model.Protocol.Structure;
+import org.openscada.protocol.ngp.model.Protocol.StructureAttribute;
+
+import com.google.common.base.Predicate;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Iterables;
 
 public class AdapterFactory implements IAdapterFactory
 {
@@ -85,20 +92,40 @@ public class AdapterFactory implements IAdapterFactory
         return String.format ( "interface.%s.%s", i.getProtocol ().getName (), i.getName () );
     }
 
+    private String makeRefId ( final Enum e )
+    {
+        return String.format ( "enum.%s.%s", e.getProtocol ().getName (), e.getName () );
+    }
+
+    private String makeRefId ( final Structure s )
+    {
+        return String.format ( "structure.%s.%s", s.getProtocol ().getName (), s.getName () );
+    }
+
     private String makeRefId ( final Message message )
     {
         return String.format ( "message.%s.%s", message.getProtocol ().getName (), message.getName () );
+    }
+
+    private String makeRefId ( final Protocol p, final AttributeStructure as, final Attribute attribute )
+    {
+        return String.format ( "attribute.%s.%s.%s", p.getName (), as.getName (), attribute.getName () );
     }
 
     protected List<? extends Object> createContent ( final Protocol protocol )
     {
         final List<Object> result = new LinkedList<Object> ();
 
+        if ( protocol.getShortDescription () != null )
+        {
+            result.add ( makeText ( protocol.getShortDescription () ) );
+        }
         if ( protocol.getDescription () != null )
         {
-            final Paragraph p = ContentFactory.eINSTANCE.createParagraph ();
-            FeatureMapUtil.addText ( p.getContent (), protocol.getDescription () );
-            result.add ( p );
+            for ( final String p : protocol.getDescription ().split ( "[\\r\\n]+" ) )
+            {
+                result.add ( makeText ( p ) );
+            }
         }
 
         if ( !protocol.getIncludedProtocols ().isEmpty () )
@@ -168,6 +195,7 @@ public class AdapterFactory implements IAdapterFactory
 
         t.getColumn ().add ( makeCol ( "Name" ) );
         t.getColumn ().add ( makeCol ( "Code" ) );
+        t.getColumn ().add ( makeCol ( "Description" ) );
 
         // details
 
@@ -178,6 +206,10 @@ public class AdapterFactory implements IAdapterFactory
             final Row row = ContentFactory.eINSTANCE.createRow ();
             row.getCell ().add ( makeXRefCell ( message.getName (), "section", makeRefId ( message ) ) );
             row.getCell ().add ( makeCell ( String.format ( "0x%04X", message.getCode () ) ) );
+            if ( message.getShortDescription () != null )
+            {
+                row.getCell ().add ( makeCell ( message.getShortDescription () ) );
+            }
             t.getRow ().add ( row );
 
             // section
@@ -187,7 +219,7 @@ public class AdapterFactory implements IAdapterFactory
             s1.getP ().add ( makeText ( String.format ( "The message code is: 0x%04X", message.getCode () ) ) );
             s1.setId ( makeRefId ( message ) );
 
-            renderAttributeStructure ( s1, message );
+            renderAttributeStructure ( protocol, s1, message );
 
             if ( !message.getInterfaces ().isEmpty () )
             {
@@ -223,7 +255,8 @@ public class AdapterFactory implements IAdapterFactory
         for ( final Structure struct : protocol.getStructures () )
         {
             final Section s1 = makeProtocolSubSection ( s, struct );
-            renderAttributeStructure ( s1, struct );
+            s1.setId ( makeRefId ( struct ) );
+            renderAttributeStructure ( protocol, s1, struct );
         }
     }
 
@@ -241,11 +274,92 @@ public class AdapterFactory implements IAdapterFactory
         {
             final Section s1 = makeProtocolSubSection ( s, i );
             s1.setId ( makeRefId ( i ) );
-            renderAttributeStructure ( s1, i );
+            renderAttributeStructure ( protocol, s1, i );
         }
     }
 
-    protected void renderAttributeStructure ( final Section s1, final AttributeStructure as )
+    private static Predicate<Attribute> longDescriptionAttributes = new Predicate<Attribute> () {
+
+        @Override
+        public boolean apply ( final Attribute input )
+        {
+            return !input.isDeleted () && input.getDescription () != null;
+        }
+    };
+
+    private static Predicate<Attribute> nonTransientAttributes = new Predicate<Attribute> () {
+
+        @Override
+        public boolean apply ( final Attribute input )
+        {
+            return !input.isDeleted () && !input.isTransient ();
+        }
+    };
+
+    private static Predicate<Attribute> transientAttributes = new Predicate<Attribute> () {
+
+        @Override
+        public boolean apply ( final Attribute input )
+        {
+            return !input.isDeleted () && input.isTransient ();
+        }
+    };
+
+    private static Predicate<Attribute> equalityAttributes = new Predicate<Attribute> () {
+
+        @Override
+        public boolean apply ( final Attribute input )
+        {
+            return !input.isDeleted () && input.isEquality ();
+        }
+    };
+
+    protected void renderAttributeStructure ( final Protocol p, final Section s1, final AttributeStructure as )
+    {
+        // equality
+
+        final Collection<Attribute> equality = Collections2.filter ( as.getAttributes (), equalityAttributes );
+        if ( !equality.isEmpty () )
+        {
+            s1.getP ().add ( makeText ( "Equality is defined by all of the following attributes:" ) );
+            final UnorderedList ul = ContentFactory.eINSTANCE.createUnorderedList ();
+            s1.getUl ().add ( ul );
+
+            for ( final Attribute attr : equality )
+            {
+                final ListItem item = ContentFactory.eINSTANCE.createListItem ();
+                ul.getItem ().add ( item );
+                FeatureMapUtil.addText ( item.getContent (), attr.getName () );
+            }
+        }
+
+        // attributes
+
+        final Collection<Attribute> nonTrans = Collections2.filter ( as.getAttributes (), nonTransientAttributes );
+        if ( !nonTrans.isEmpty () )
+        {
+            s1.getP ().add ( makeText ( "The structure consists of the following attributes:" ) );
+            renderAttributesTable ( s1, p, as, nonTrans );
+        }
+
+        final Collection<Attribute> trans = Collections2.filter ( as.getAttributes (), transientAttributes );
+        if ( !trans.isEmpty () )
+        {
+            s1.getP ().add ( makeText ( "The following attributes are transient and not encoded when transmitted:" ) );
+            renderAttributesTable ( s1, p, as, trans );
+        }
+
+        // long desc attributes
+
+        for ( final Attribute attr : Iterables.filter ( as.getAttributes (), longDescriptionAttributes ) )
+        {
+            final Section s2 = makeSubSection ( s1, attr.getName () );
+            s2.setId ( makeRefId ( p, as, attr ) );
+            renderLongDescription ( s2, attr.getDescription () );
+        }
+    }
+
+    protected void renderAttributesTable ( final Section s1, final Protocol p, final AttributeStructure as, final Collection<Attribute> attributes )
     {
         final SimpleTable t = ContentFactory.eINSTANCE.createSimpleTable ();
         s1.getSimpleTable ().add ( t );
@@ -253,16 +367,33 @@ public class AdapterFactory implements IAdapterFactory
         t.getColumn ().add ( makeCol ( "#" ) );
         t.getColumn ().add ( makeCol ( "Name" ) );
         t.getColumn ().add ( makeCol ( "Type" ) );
-        t.getColumn ().add ( makeCol ( "Type Modifier" ) );
+        t.getColumn ().add ( makeCol ( "Modifier" ) );
+        t.getColumn ().add ( makeCol ( "Description" ) );
 
-        for ( final Attribute attr : as.getAttributes () )
+        for ( final Attribute attr : attributes )
         {
+            if ( attr.isDeleted () )
+            {
+                continue;
+            }
+
             final Row r = ContentFactory.eINSTANCE.createRow ();
             t.getRow ().add ( r );
             r.getCell ().add ( makeCell ( String.format ( "%d", attr.getFieldNumber () ) ) );
-            r.getCell ().add ( makeCell ( attr.getName () ) );
-            r.getCell ().add ( makeCell ( makeTypeName ( attr ) ) );
+
+            if ( attr.getDescription () != null )
+            {
+                r.getCell ().add ( makeXRefCell ( attr.getName (), "section", makeRefId ( p, as, attr ) ) );
+            }
+            else
+            {
+                r.getCell ().add ( makeCell ( attr.getName () ) );
+            }
+
+            r.getCell ().add ( makeTypeNameCell ( attr ) );
             r.getCell ().add ( makeCell ( String.format ( "%s", attr.getType () ) ) );
+
+            r.getCell ().add ( makeCell ( attr.getShortDescription () ) );
         }
     }
 
@@ -270,21 +401,47 @@ public class AdapterFactory implements IAdapterFactory
     {
         final Section s1 = makeSubSection ( s, as.getName () );
 
-        if ( as.getDescription () != null )
+        if ( as.getShortDescription () != null )
         {
-            s1.getP ().add ( makeText ( as.getDescription () ) );
+            s1.getP ().add ( makeText ( as.getShortDescription () ) );
         }
+
+        renderLongDescription ( s1, as.getDescription () );
         return s1;
     }
 
-    private String makeTypeName ( final Attribute attr )
+    private void renderLongDescription ( final Section s, final String description )
     {
-        final String name = attr.getClass ().getSimpleName ();
-        if ( name.endsWith ( "AttributeImpl" ) ) //$NON-NLS-1$
+        if ( description == null )
         {
-            return name.substring ( 0, name.length () - "AttributeImpl".length () ); //$NON-NLS-1$
+            return;
         }
-        return name;
+
+        for ( final String p : description.split ( "[\\r\\n]+" ) )
+        {
+            s.getP ().add ( makeText ( p ) );
+        }
+    }
+
+    private Cell makeTypeNameCell ( final Attribute attr )
+    {
+        if ( attr instanceof StructureAttribute )
+        {
+            return makeXRefCell ( ( (StructureAttribute)attr ).getStructure ().getName (), "section", makeRefId ( ( (StructureAttribute)attr ).getStructure () ) );
+        }
+        else if ( attr instanceof EnumAttribute )
+        {
+            return makeXRefCell ( ( (EnumAttribute)attr ).getEnumType ().getName (), "section", makeRefId ( ( (EnumAttribute)attr ).getEnumType () ) );
+        }
+        else
+        {
+            final String name = attr.getClass ().getSimpleName ();
+            if ( name.endsWith ( "AttributeImpl" ) ) //$NON-NLS-1$
+            {
+                return makeCell ( name.substring ( 0, name.length () - "AttributeImpl".length () ) ); //$NON-NLS-1$
+            }
+            return makeCell ( name );
+        }
     }
 
     private void createEnums ( final Section s, final Protocol protocol )
@@ -300,7 +457,9 @@ public class AdapterFactory implements IAdapterFactory
         for ( final Enum e : protocol.getEnums () )
         {
             final Section s1 = makeSubSection ( s, e.getName () );
-            s1.getP ().add ( makeText ( e.getDescription () ) );
+            s1.setId ( makeRefId ( e ) );
+            s1.getP ().add ( makeText ( e.getShortDescription () ) );
+            renderLongDescription ( s1, e.getDescription () );
 
             final SimpleTable t = ContentFactory.eINSTANCE.createSimpleTable ();
             s1.getSimpleTable ().add ( t );
