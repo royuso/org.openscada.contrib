@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.openscada.protocol.ngp.model.Protocol.Protocol"
+            class="org.openscada.doc.translator.ngp.AdapterFactory">
+         <adapter
+               type="org.openscada.doc.model.doc.map.SectionMarker">
+         </adapter>
+      </factory>
+   </extension>
+
+</plugin>
