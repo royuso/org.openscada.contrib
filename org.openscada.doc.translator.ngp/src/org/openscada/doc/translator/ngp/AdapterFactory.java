@@ -82,7 +82,12 @@ public class AdapterFactory implements IAdapterFactory
 
     private String makeRefId ( final Interface i )
     {
-        return "interface." + i.getName ();
+        return String.format ( "interface.%s.%s", i.getProtocol ().getName (), i.getName () );
+    }
+
+    private String makeRefId ( final Message message )
+    {
+        return String.format ( "message.%s.%s", message.getProtocol ().getName (), message.getName () );
     }
 
     protected List<? extends Object> createContent ( final Protocol protocol )
@@ -171,23 +176,26 @@ public class AdapterFactory implements IAdapterFactory
             // overview entry
 
             final Row row = ContentFactory.eINSTANCE.createRow ();
-            row.getCell ().add ( makeCell ( message.getName () ) );
-            row.getCell ().add ( makeCell ( String.format ( "%04X", message.getCode () ) ) );
+            row.getCell ().add ( makeXRefCell ( message.getName (), "section", makeRefId ( message ) ) );
+            row.getCell ().add ( makeCell ( String.format ( "0x%04X", message.getCode () ) ) );
             t.getRow ().add ( row );
 
             // section
 
             final Section s1 = makeProtocolSubSection ( s, message );
 
-            s1.getP ().add ( makeText ( String.format ( "The message code is: %04X", message.getCode () ) ) );
+            s1.getP ().add ( makeText ( String.format ( "The message code is: 0x%04X", message.getCode () ) ) );
+            s1.setId ( makeRefId ( message ) );
 
             renderAttributeStructure ( s1, message );
 
             if ( !message.getInterfaces ().isEmpty () )
             {
                 s1.getP ().add ( makeText ( "The message implements the following interfaces:" ) );
+
                 final UnorderedList ul = ContentFactory.eINSTANCE.createUnorderedList ();
                 s1.getUl ().add ( ul );
+
                 for ( final Interface i : message.getInterfaces () )
                 {
                     final ListItem item = ContentFactory.eINSTANCE.createListItem ();
@@ -197,7 +205,6 @@ public class AdapterFactory implements IAdapterFactory
                     xref.setId ( makeRefId ( i ) );
                     FeatureMapUtil.addText ( xref.getContent (), i.getName () );
                     item.getXref ().add ( xref );
-
                 }
             }
         }
@@ -328,6 +335,19 @@ public class AdapterFactory implements IAdapterFactory
         {
             FeatureMapUtil.addText ( cell.getContent (), string );
         }
+        return cell;
+    }
+
+    private Cell makeXRefCell ( final String name, final String type, final String id )
+    {
+        final Cell cell = ContentFactory.eINSTANCE.createCell ();
+        final CrossReference xref = ContentFactory.eINSTANCE.createCrossReference ();
+        xref.setId ( id );
+        xref.setType ( type );
+        FeatureMapUtil.addText ( xref.getContent (), name );
+
+        cell.getXref ().add ( xref );
+
         return cell;
     }
 
