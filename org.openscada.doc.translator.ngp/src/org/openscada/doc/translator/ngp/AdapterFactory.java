@@ -417,9 +417,28 @@ public class AdapterFactory implements IAdapterFactory
             return;
         }
 
-        for ( final String p : description.split ( "[\\r\\n]+" ) )
+        StringBuilder sb = new StringBuilder ();
+        for ( final String p : description.split ( "[\\r\\n]" ) )
         {
-            s.getP ().add ( makeText ( p ) );
+            if ( p.isEmpty () )
+            {
+                if ( sb.length () > 0 )
+                {
+                    s.getP ().add ( makeText ( sb.toString () ) );
+                    sb = new StringBuilder ();
+                }
+            }
+            else
+            {
+                sb.append ( p );
+                sb.append ( ' ' );
+            }
+        }
+
+        // final last words
+        if ( sb.length () > 0 )
+        {
+            s.getP ().add ( makeText ( sb.toString () ) );
         }
     }
 
