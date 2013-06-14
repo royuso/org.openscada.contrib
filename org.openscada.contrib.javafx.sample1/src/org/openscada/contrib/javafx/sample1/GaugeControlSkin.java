@@ -94,6 +94,7 @@ public class GaugeControlSkin extends SkinBase<GaugeControl, BehaviorBase<GaugeC
         }
         catch ( final Exception e )
         {
+        	e.printStackTrace ();
             this.gauge.setGlowColor ( Color.MAGENTA );
             this.gauge.setGlowOn ( true );
         }

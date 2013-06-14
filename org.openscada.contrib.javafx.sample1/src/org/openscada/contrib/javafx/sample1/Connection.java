@@ -28,6 +28,8 @@ import javafx.collections.ObservableList;
 
 import org.openscada.core.ConnectionInformation;
 import org.openscada.core.client.AutoReconnectController;
+import org.openscada.core.client.ConnectionState;
+import org.openscada.core.client.ConnectionStateListener;
 import org.openscada.da.client.ItemManagerImpl;
 import org.openscada.da.client.ngp.ConnectionImpl;
 
@@ -101,6 +103,16 @@ public class Connection
     {
 
         this.connection = new ConnectionImpl ( ConnectionInformation.fromURI ( this.connectionString ) );
+        connection.addConnectionStateListener(new ConnectionStateListener() {
+			
+			@Override
+			public void stateChange(org.openscada.core.client.Connection connection, ConnectionState state,
+					Throwable e) {
+				System.out.println(state);
+				if ( e != null )
+					e.printStackTrace();
+			}
+		});
         this.controller = new AutoReconnectController ( this.connection, 10 * 1000 );
         this.controller.connect ();
         this.itemManager = new ItemManagerImpl ( this.connection );
