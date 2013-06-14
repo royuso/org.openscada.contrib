@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.GridPane?>
+<?import org.openscada.contrib.javafx.sample1.Connection?>
+<?import org.openscada.contrib.javafx.sample1.Item?>
+<?import org.openscada.contrib.javafx.sample1.NumericConverter?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+<?import java.net.URL?>
+<?language javascript?>
+<?import java.lang.String?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import org.openscada.contrib.javafx.sample1.GaugeControl?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml">
+
+<stylesheets>
+<URL value="@openscada.css"/>
+</stylesheets>
+
+<fx:define>
+	<Connection>
+		<connectionString>da:ngp://localhost:2102</connectionString>
+		<items>
+			<Item fx:id="item1" id="memory-cell-0" onStateChange="print"/>
+		</items>
+	</Connection>
+</fx:define>
+
+<top>
+	<Text text="openSCADA Java FX Sample #1" styleClass="title"/>
+</top>
+
+<center>
+	<GaugeControl input="${item1.state}"/>
+</center>
+
+</BorderPane>
+

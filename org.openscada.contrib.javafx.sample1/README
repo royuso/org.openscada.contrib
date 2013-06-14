@@ -1,0 +1,4 @@
+This project is an eclipse project. In order to build it the "prepare.ant"
+must be run first in order to build the "openscada.jar" which is required by the project.
+
+The Gauge control itself is from http://jfxtras.org/

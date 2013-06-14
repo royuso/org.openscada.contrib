@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ASCII"?>
+<anttasks:AntTask xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:anttasks="http://at.bestsolution.efxclipse.tooling.jdt/1.0" buildDirectory="${project}/build">
+  <deploy height="480" width="640" packagingFormat="all">
+    <application name="openSCADAFXSample1" mainclass="org.openscada.contrib.javafx.sample1.Application" version="0.1.0"/>
+    <info vendor="openSCADA.org"/>
+  </deploy>
+  <signjar/>
+</anttasks:AntTask>

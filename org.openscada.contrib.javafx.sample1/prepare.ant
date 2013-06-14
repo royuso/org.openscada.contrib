@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+     JavaFX Sample
+
+     Jens Reimann <ctron@dentrassi.de>
+     ====================================================================== -->
+<project name="JavaFX Sample" default="default">
+	<description>
+    	JavaFX Sample
+    </description>
+
+	<property name="download.base" value="http://download.openscada.org" />
+	<property name="openscada.version" value="1.2.0" />
+	<property name="openscada.release" value="I" />
+
+	<!-- ================================= 
+          target: default              
+         ================================= -->
+	<target name="default" depends="download,build">
+	</target>
+
+	<!-- ================================= 
+          target: clear              
+         ================================= -->
+	<target name="clean" depends="" description="Clean up">
+		<delete dir="${basedir}/lib.downloaded" />
+		<delete dir="${basedir}/lib.unpacked" />
+	</target>
+
+
+	<!-- ================================= 
+          target: download              
+         ================================= -->
+	<target name="download" depends="" description="Download JARs">
+		<getPlainZip project="external" buildType="${openscada.release}" buildId="${openscada.version}" />
+		<getPlainZip project="aurora" buildType="${openscada.release}" buildId="${openscada.version}" />
+		<getPlainZip project="oxygen" buildType="${openscada.release}" buildId="${openscada.version}" />
+		<getPlainZip project="atlantis" buildType="${openscada.release}" buildId="${openscada.version}" />
+		<!--
+		<getPlainZip project="utgard" buildType="${openscada.release}" buildId="${openscada.version}" />
+		-->
+	</target>
+				
+	<!-- ================================= 
+          target: reduce              
+         ================================= -->
+    <target name="reduce">
+		<!-- cleanup unused stuff -->
+		<delete>
+			<fileset dir="${basedir}/lib.unpacked">
+				<include name="org.openscada.hd.*.jar"/>
+				<include name="org.openscada.ae.*.jar"/>
+				<include name="org.openscada.ca.*.jar"/>
+				<include name="org.openscada.ds.*.jar"/>
+				<include name="org.openscada.core.server.*.jar"/>
+				<include name="org.openscada.da.server.*.jar"/>
+				<include name="org.openscada.da.master.*.jar"/>
+				<include name="org.openscada.da.datasource.*.jar"/>
+				<include name="*.*.source_*.jar"/>
+					
+				<include name="com.springsource.*.jar"/>
+				<include name="org.apache.poi_*.jar"/>
+				<include name="org.apache.x*.jar"/>
+				<include name="org.eclipse.*.jar"/>
+				<include name="org.h2.*.jar"/>
+				<include name="bcprov*.jar"/>
+				<include name="org.openscada.external.odfdom.*.jar"/>
+				<include name="org.openscada.external.postgresql.*.jar"/>
+				<include name="org.openscada.external.jcifs.*.jar"/>
+				<include name="org.openscada.external.jbzip2.*.jar"/>
+			</fileset>
+		</delete>
+    </target>
+
+	<!-- ================================= 
+          target: build              
+         ================================= -->
+	<target name="build" depends="reduce">
+		<delete file="lib/openscada.jar"/>
+		<jar destfile="lib/openscada.jar">
+			<restrict>
+				<name name="**/*.class" />
+				<archives>
+					<zips>
+						<fileset dir="${basedir}/lib.unpacked" includes="**/*.jar" />
+					</zips>
+				</archives>
+			</restrict>
+		</jar>
+	</target>
+
+
+	<!-- = = = = = = = = = = = = = = = = =
+          macrodef: getPlainZip          
+         = = = = = = = = = = = = = = = = = -->
+	<macrodef name="getPlainZip">
+		<attribute name="buildId" />
+		<attribute name="buildType" />
+		<attribute name="project" />
+
+		<sequential>
+
+			<mkdir dir="${basedir}/lib.downloaded" />
+			<mkdir dir="${basedir}/lib.unpacked" />
+
+			<get usetimestamp="true" src="${download.base}/@{project}/@{buildType}/@{buildId}/org.openscada.@{project}.sdk-@{buildType}.@{buildId}.zip" dest="${basedir}/lib.downloaded/openscada-@{project}-@{buildType}.@{buildId}.zip" />
+
+			<unzip src="${basedir}/lib.downloaded/openscada-@{project}-@{buildType}.@{buildId}.zip" dest="${basedir}/lib.unpacked" />
+		</sequential>
+	</macrodef>
+
+
+</project>

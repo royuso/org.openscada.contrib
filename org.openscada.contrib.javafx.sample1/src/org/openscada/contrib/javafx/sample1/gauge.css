@@ -1,0 +1,3 @@
+.openscada-gauge-control {
+	-fx-skin: "org.openscada.contrib.javafx.sample1.GaugeControlSkin"
+}
