@@ -17,7 +17,6 @@ import org.openscada.ui.databinding.item.DataItemObservableValue;
 
 public class BasicEntryPoint extends AbstractEntryPoint {
 
-	private ListViewer list;
 	private Label label;
 	private Text text;
 	private DataBindingContext dbc;

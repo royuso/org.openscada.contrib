@@ -120,6 +120,9 @@
   	
   	<openscada.builder.copyPlugin id="org.openscada.da.server.exporter.spring"/>
   	
+  	<openscada.builder.copyFeature id="org.openscada.ui.rap.test1"/>
+  	<openscada.builder.copyPlugin id="org.openscada.ui.rap.test1"/>
+  	
   </target>
 
   <!-- ===================================================================== -->

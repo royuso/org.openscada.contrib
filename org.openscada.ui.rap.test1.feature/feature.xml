@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.openscada.ui.rap.test1"
+      label="RAP Test1 Feature"
+      version="1.2.0.qualifier"
+      provider-name="openSCADA.org">
+
+   <plugin
+         id="org.openscada.ui.rap.test1"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>
