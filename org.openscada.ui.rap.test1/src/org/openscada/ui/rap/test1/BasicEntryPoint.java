@@ -8,6 +8,7 @@ import org.eclipse.rap.rwt.service.ServerPushSession;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -41,6 +42,7 @@ public class BasicEntryPoint extends AbstractEntryPoint
         this.label.setText ( "Value:" );
 
         this.text = new Text ( parent, SWT.READ_ONLY | SWT.BORDER );
+        this.text.setLayoutData ( new GridData ( 400, SWT.DEFAULT ) );
         this.dbc = new DataBindingContext ( realm );
 
         this.item = new DataItemObservableValue ( Activator.getDefault ().getContext (), "connection.da", "OS.DEMO.ARDUINO1.LUX.V", realm );
