@@ -102,6 +102,11 @@
 		
 		<module>../org.openscada.spring.client</module>
 		<module>../org.openscada.spring.server</module>
+		
+		<module>../org.openscada.spring.server</module>
+		
+		<module>../org.openscada.ui.rap.test1</module>
+		<module>../org.openscada.ui.rap.test1.feature</module>
 
 		<module>builder</module> <!-- holds the p2 build -->
 	</modules>

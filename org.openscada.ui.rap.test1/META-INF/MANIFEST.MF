@@ -1,8 +1,8 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Testrap1
+Bundle-Name: openSCADA RAP Sample #1
 Bundle-SymbolicName: org.openscada.ui.rap.test1
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Activator: org.openscada.ui.rap.test1.Activator
 Bundle-RequiredExecutionEnvironment: JavaSE-1.7
 Bundle-ActivationPolicy: lazy
@@ -21,3 +21,4 @@ Import-Package: org.eclipse.core.databinding,
  org.osgi.framework,
  org.osgi.util.tracker;version="1.5.1"
 Service-Component: OSGI-INF/contribution.xml
+Bundle-Vendor: openSCADA.org
