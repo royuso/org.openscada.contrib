@@ -34,12 +34,12 @@ import net.percederberg.mibble.MibValueSymbol;
 import net.percederberg.mibble.snmp.SnmpObjectType;
 import net.percederberg.mibble.value.ObjectIdentifierValue;
 
-import org.openscada.core.Variant;
+import org.eclipse.scada.core.Variant;
+import org.eclipse.scada.utils.collection.MapBuilder;
+import org.eclipse.scada.utils.str.StringHelper;
 import org.openscada.da.server.browser.common.FolderCommon;
 import org.openscada.da.server.snmp.mib.MibManager;
 import org.openscada.da.snmp.configuration.MibsType;
-import org.openscada.utils.collection.MapBuilder;
-import org.openscada.utils.str.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,7 +127,7 @@ public class MibbleMIBManager implements MibManager
     }
 
     /* (non-Javadoc)
-     * @see org.openscada.da.server.snmp.mib.MibManager#fillAttributes(String, org.openscada.utils.collection.MapBuilder)
+     * @see org.openscada.da.server.snmp.mib.MibManager#fillAttributes(String, org.eclipse.scada.utils.collection.MapBuilder)
      */
     @Override
     public void fillAttributes ( final String oid, final MapBuilder<String, Variant> attributes )

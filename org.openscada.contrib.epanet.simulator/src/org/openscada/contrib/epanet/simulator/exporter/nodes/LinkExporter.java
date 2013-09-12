@@ -21,9 +21,9 @@ package org.openscada.contrib.epanet.simulator.exporter.nodes;
 
 import org.addition.epanet.hydraulic.structures.SimulationLink;
 import org.addition.epanet.network.structures.Link.StatType;
+import org.eclipse.scada.core.Variant;
 import org.openscada.contrib.epanet.simulator.exporter.ExporterContext;
 import org.openscada.contrib.epanet.simulator.exporter.ExporterObject;
-import org.openscada.core.Variant;
 import org.openscada.da.server.common.DataItemCommand;
 import org.openscada.da.server.common.DataItemCommand.Listener;
 import org.openscada.da.server.common.exporter.ObjectExporter;

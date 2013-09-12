@@ -19,8 +19,8 @@
 
 package org.openscada.contrib.epanet.simulator;
 
+import org.eclipse.scada.utils.init.Initializer;
 import org.openscada.da.server.epanet.simulator.configuration.ConfigurationPackage;
-import org.openscada.utils.init.Initializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

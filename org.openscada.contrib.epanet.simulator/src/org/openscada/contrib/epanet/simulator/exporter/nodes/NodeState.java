@@ -19,7 +19,7 @@
 
 package org.openscada.contrib.epanet.simulator.exporter.nodes;
 
-import org.openscada.utils.beans.AbstractPropertyChange;
+import org.eclipse.scada.utils.beans.AbstractPropertyChange;
 
 public class NodeState extends AbstractPropertyChange
 {

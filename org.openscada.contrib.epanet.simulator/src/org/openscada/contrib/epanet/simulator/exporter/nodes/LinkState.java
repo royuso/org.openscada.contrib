@@ -21,7 +21,7 @@ package org.openscada.contrib.epanet.simulator.exporter.nodes;
 
 import org.addition.epanet.hydraulic.structures.SimulationLink;
 import org.addition.epanet.network.structures.Link.StatType;
-import org.openscada.utils.beans.AbstractPropertyChange;
+import org.eclipse.scada.utils.beans.AbstractPropertyChange;
 
 public class LinkState extends AbstractPropertyChange
 {
