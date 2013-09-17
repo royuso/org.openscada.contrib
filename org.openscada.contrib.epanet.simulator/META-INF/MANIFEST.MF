@@ -4,7 +4,10 @@ Bundle-Name: openSCADA EPANET Simulator
 Bundle-SymbolicName: org.openscada.contrib.epanet.simulator;singleton:=true
 Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: openSCADA.org
+Require-Bundle: org.addition.epanet;bundle-version="1.0.0",
+ org.slf4j.jul;bundle-version="1.7.2"
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Service-Component: OSGI-INF/hiveCreator.xml
 Import-Package: org.eclipse.emf.common,
  org.eclipse.emf.common.notify,
  org.eclipse.emf.common.notify.impl,
@@ -19,12 +22,12 @@ Import-Package: org.eclipse.emf.common,
  org.eclipse.emf.ecore.xmi.impl,
  org.eclipse.emf.ecore.xmi.util,
  org.eclipse.emf.ecore.xml.type,
- org.eclipse.scada.core;version="1.1.0",
- org.eclipse.scada.sec;version="1.1.0",
- org.eclipse.scada.sec.callback;version="1.1.0",
- org.eclipse.scada.utils.beans;version="1.1.0",
- org.eclipse.scada.utils.concurrent;version="1.1.0",
- org.eclipse.scada.utils.init;version="1.2.0",
+ org.eclipse.scada.core;version="0.1.0",
+ org.eclipse.scada.sec;version="0.1.0",
+ org.eclipse.scada.sec.callback;version="0.1.0",
+ org.eclipse.scada.utils.beans;version="0.1.0",
+ org.eclipse.scada.utils.concurrent;version="0.1.0",
+ org.eclipse.scada.utils.init;version="0.1.0",
  org.openscada.core.data;version="1.1.0",
  org.openscada.core.server;version="1.1.0",
  org.openscada.core.server.common;version="1.1.0",
@@ -40,7 +43,4 @@ Import-Package: org.eclipse.emf.common,
  org.openscada.da.server.common.item.factory;version="1.2.0",
  org.openscada.da.server.exporter;version="1.1.0",
  org.slf4j;version="1.6.4"
-Require-Bundle: org.addition.epanet;bundle-version="1.0.0",
- org.slf4j.jul;bundle-version="1.7.2"
-Service-Component: OSGI-INF/hiveCreator.xml
 Bundle-ActivationPolicy: lazy
