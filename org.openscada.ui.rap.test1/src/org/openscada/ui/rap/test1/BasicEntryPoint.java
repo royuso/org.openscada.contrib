@@ -13,7 +13,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
-import org.openscada.ui.databinding.item.DataItemObservableValue;
+import org.eclipse.scada.ui.databinding.item.DataItemObservableValue;
 
 public class BasicEntryPoint extends AbstractEntryPoint
 {

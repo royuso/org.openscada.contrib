@@ -3,9 +3,9 @@ package org.openscada.ui.rap.test1;
 import java.util.Dictionary;
 import java.util.Hashtable;
 
-import org.openscada.core.ConnectionInformation;
-import org.openscada.core.client.DriverFactory;
-import org.openscada.core.connection.provider.ConnectionRequest;
+import org.eclipse.scada.core.ConnectionInformation;
+import org.eclipse.scada.core.client.DriverFactory;
+import org.eclipse.scada.core.connection.provider.ConnectionRequest;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
