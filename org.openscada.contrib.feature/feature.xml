@@ -30,6 +30,7 @@
       <import plugin="javax.servlet"/>
    </requires>
 
+<!--
    <plugin
          id="org.openscada.spring.client"
          download-size="0"
@@ -57,5 +58,7 @@
          install-size="0"
          version="0.0.0"
          unpack="false"/>
+         
+         -->
 
 </feature>
