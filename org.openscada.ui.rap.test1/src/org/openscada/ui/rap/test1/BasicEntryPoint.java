@@ -59,6 +59,10 @@ public class BasicEntryPoint extends AbstractEntryPoint
                 handleDispose ();
             }
         } );
+        
+        Label versionInfo = new Label ( parent, SWT.NONE );
+        versionInfo.setLayoutData ( new GridData ( SWT.BEGINNING, SWT.BEGINNING, false, false, 2, 1 ) );
+        versionInfo.setText ( String.format ( "Version: %s", Activator.getDefault ().getContext ().getBundle ().getVersion () ) );
     }
 
     protected void handleDispose ()
